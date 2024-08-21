@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
 import 'package:rgt_pulse/auth/login.dart';
-import 'package:rgt_pulse/auth/t_login.dart';
 import 'package:rgt_pulse/task_list.dart';
 
 class SplashPage extends StatefulWidget {

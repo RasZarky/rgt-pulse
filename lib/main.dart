@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:rgt_pulse/auth/splash.dart';
-import 'package:rgt_pulse/auth/t_login.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
