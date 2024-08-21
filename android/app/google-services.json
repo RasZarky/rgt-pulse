@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "568849569407",
+    "project_id": "rgt-pulse",
+    "storage_bucket": "rgt-pulse.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:568849569407:android:89893d15d97413ea85114a",
+        "android_client_info": {
+          "package_name": "com.example.rgt_pulse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmuF6H5Ot_4LafbOoplGjKUB2AYPPpGXU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
