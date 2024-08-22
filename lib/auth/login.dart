@@ -38,22 +38,25 @@ class _LoginScreenState extends State<LoginScreen> {
 
         User? user = userCredential.user;
 
-        if (user != null && !user.emailVerified) {
-          // If email is not verified, send verification email
-          await user.sendEmailVerification();
-
-          // Sign out to prevent unverified access
-          await FirebaseAuth.instance.signOut();
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('A verification email has been sent to ${emailController.text}. Please verify your email before logging in.'),
-            ),
-          );
-        } else {
+        // if (user != null
+        //     &&
+        //     !user.emailVerified
+        // ) {
+        //   // If email is not verified, send verification email
+        //   await user.sendEmailVerification();
+        //
+        //   // Sign out to prevent unverified access
+        //   await FirebaseAuth.instance.signOut();
+        //
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     SnackBar(
+        //       content: Text('A verification email has been sent to ${emailController.text}. Please verify your email before logging in.'),
+        //     ),
+        //   );
+        // } else {
           // Proceed to the app (replace '/home' with your home page route)
           Navigator.push(context, MaterialPageRoute(builder: (context) => RootApp() ));
-        }
+        //}
       } on FirebaseAuthException catch (e) {
 
         ScaffoldMessenger.of(context).showSnackBar(

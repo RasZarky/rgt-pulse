@@ -7,7 +7,7 @@ import 'package:rgt_pulse/pages/stats_page.dart';
 import '../theme/colors.dart';
 import 'budget_page.dart';
 import 'create_budge_page.dart';
-import 'daily_page.dart';
+import 'home_page.dart';
 
 class RootApp extends StatefulWidget {
   @override
@@ -17,7 +17,7 @@ class RootApp extends StatefulWidget {
 class _RootAppState extends State<RootApp> {
   int pageIndex = 0;
   List<Widget> pages = [
-    DailyPage(),
+    HomePage(),
     StatsPage(),
     BudgetPage(),
     ProfilePage(),
@@ -86,7 +86,7 @@ class _RootAppState extends State<RootApp> {
       onTap: (index) {
         selectedTab(index);
       },
-      //other params
+      blurEffect: true,
     );
   }
 

@@ -34,7 +34,7 @@ class _SplashPageState extends State<SplashPage> {
         // User is logged in but email is not verified
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
+          MaterialPageRoute(builder: (context) => RootApp()),
         );
       }
     } else {

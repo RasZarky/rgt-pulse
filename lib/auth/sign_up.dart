@@ -72,15 +72,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (_userExists(emailController.text)) {
         try {
 
-
           // Create a new user with Firebase Authentication
           UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text,
             password: passController.text,
           );
 
-          // Send verification email
-          await userCredential.user!.sendEmailVerification();
+          // TODO:Send verification email
+          // await userCredential.user!.sendEmailVerification();
 
           setState(() {
             loading = false;
