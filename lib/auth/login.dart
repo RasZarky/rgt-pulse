@@ -6,6 +6,7 @@ import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
 import 'package:rgt_pulse/auth/forgot_Password.dart';
 import 'package:rgt_pulse/auth/sign_up.dart';
 
+import '../pages/root_app.dart';
 import '../task_list.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -51,21 +52,12 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         } else {
           // Proceed to the app (replace '/home' with your home page route)
-          Navigator.push(context, MaterialPageRoute(builder: (context) => TaskListPage() ));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => RootApp() ));
         }
       } on FirebaseAuthException catch (e) {
-        String errorMessage;
-
-        if (e.code == 'user-not-found') {
-          errorMessage = 'No user found for that email.';
-        } else if (e.code == 'wrong-password') {
-          errorMessage = 'Wrong password provided.';
-        } else {
-          errorMessage = 'An unknown error occurred. Please try again later.';
-        }
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage)),
+          SnackBar(content: Text("Error: ${e.message}")),
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(

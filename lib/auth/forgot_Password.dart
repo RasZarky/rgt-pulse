@@ -276,20 +276,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             setState(() {
               loading = false;
             });
-            switch (e.code) {
-              case 'firebase_auth/invalid-email':
+
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("❌ Invalid email")),
+                   SnackBar(content: Text("❌ An error occurred: ${e.message}")),
                 );
-              case 'firebase_auth/user-not-found':
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("👤 User not found")),
-                );
-              default:
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("❌ An error occurred")),
-                );
-            }
+
           } catch (_) {
             setState(() {
               loading = false;

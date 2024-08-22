@@ -4,6 +4,8 @@ import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
 import 'package:rgt_pulse/auth/login.dart';
 import 'package:rgt_pulse/task_list.dart';
 
+import '../pages/root_app.dart';
+
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
@@ -26,27 +28,26 @@ class _SplashPageState extends State<SplashPage> {
         // User is logged in and email is verified
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => TaskListPage()),
+          MaterialPageRoute(builder: (context) => RootApp()),
         );
       } else {
         // User is logged in but email is not verified
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
       }
     } else {
       // User is not logged in
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
       );
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     _checkLoginStatus();
     super.initState();
   }

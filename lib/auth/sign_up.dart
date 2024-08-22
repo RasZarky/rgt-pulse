@@ -98,24 +98,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
           Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen() ));
 
         } on FirebaseAuthException catch (e) {
-          // Handle Firebase authentication errors
-          String errorMessage;
-          if (e.code == 'email-already-in-use') {
-            errorMessage = 'This email address is already in use.';
-          } else if (e.code == 'invalid-email') {
-            errorMessage = 'This email address is invalid.';
-          } else if (e.code == 'weak-password') {
-            errorMessage = 'The password is too weak.';
-          } else {
-            errorMessage = 'An unknown error occurred. Please try again later.';
-          }
 
           setState(() {
             loading = false;
           });
           // Show error message
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(errorMessage)),
+            SnackBar(content: Text("Error: ${e.message}")),
           );
         } catch (e) {
 
