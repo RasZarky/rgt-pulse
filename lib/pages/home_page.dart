@@ -119,13 +119,13 @@ class _HomePageState extends State<HomePage> {
             ),
           ]),
           child: Padding(
-            padding: const EdgeInsets.only(top: 60, right: 20, left: 20, bottom: 25),
+            padding: const EdgeInsets.only(top: 30, right: 20, left: 20, bottom: 25),
             child: Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Image.asset("assets/logo.png", height: 50, width: 50),
+                    Image.asset("assets/logo.png", height: 70, width: 70),
                     const Text(
                       "MY Projects",
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: black),
