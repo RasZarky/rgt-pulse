@@ -172,8 +172,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height / 1.4,
+        Expanded(
           child: ListView.builder(
             itemCount: filteredTasks.length,
             itemBuilder: (context, index) {
@@ -182,6 +181,7 @@ class _HomePageState extends State<HomePage> {
               var taskName = task['current']['name'];
               var status = task['current']['status']['status'];
               var color =  task['current']['status']['color'];
+              var taskId = task['_id']["\$oid"];
               var newColorCode = Color(int.parse(color.replaceFirst('#', '0xFF')));
 
               return GestureDetector(
@@ -192,6 +192,7 @@ class _HomePageState extends State<HomePage> {
                       builder: (context) => TaskDetailsPage(
                         projectName: projectName,
                         taskName: taskName,
+                        tasktId: taskId,
                       ),
                     ),
                   );
