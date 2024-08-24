@@ -24,46 +24,108 @@ class _AllPageState extends State<AllPage> {
     _loadTaskActivities();
   }
 
-  // Get current user's email from FirebaseAuth
-
-
   Future<void> _loadTaskActivities() async {
     setState(() {
       loading = true;
     });
 
-    // Load JSON from file
     String jsonString = await rootBundle.loadString('assets/jesse.task_activities.json');
     List<dynamic> jsonData = json.decode(jsonString);
 
-    // Parse data and filter based on the current user's email
-    Set<String> uniqueProjectNames = {};  // Use a Set to avoid duplicate project names
+    Set<String> uniqueProjectNames = {};
     List<dynamic> filteredTasks = [];
 
     jsonData.forEach((task) {
       var current = task['current'];
-
       filteredTasks.add(task);
-        // Add the project name to the Set if the user is a collaborator
-        uniqueProjectNames.add(current['project']);
+      uniqueProjectNames.add(current['project']);
     });
 
     setState(() {
       tasks = filteredTasks;
-      projectNames = uniqueProjectNames.toList();  // Convert Set to List for use in the UI
+      projectNames = uniqueProjectNames.toList();
       loading = false;
     });
   }
 
   List<dynamic> _getFilteredTasks() {
     if (activeProject == -1) {
-      // If "All" is selected, return all tasks
       return tasks;
     } else {
-      // Otherwise, return tasks for the selected project only
       String selectedProject = projectNames[activeProject];
       return tasks.where((task) => task['current']['project'] == selectedProject).toList();
     }
+  }
+
+  void _showGridMenu() {
+    showModalBottomSheet(
+      context: context,
+      elevation: 10,
+      isDismissible: true,
+      enableDrag: true,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      builder: (context) {
+        return Container(
+          padding: EdgeInsets.all(20),
+          child: GridView.count(
+            crossAxisCount: 3, // Number of columns in the grid
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            children: [
+              _buildGridMenuItem(Icons.info, 'Project Info', () {
+                Navigator.pop(context);
+                // Handle Project Info action
+              }),
+              _buildGridMenuItem(Icons.filter_list, 'Filter Tasks', () {
+                Navigator.pop(context);
+                // Handle Filter Tasks action
+              }),
+              _buildGridMenuItem(Icons.settings, 'Settings', () {
+                Navigator.pop(context);
+                // Handle Settings action
+              }),
+              _buildGridMenuItem(Icons.notifications, 'Notifications', () {
+                Navigator.pop(context);
+                // Handle Notifications action
+              }),
+              _buildGridMenuItem(Icons.share, 'Share', () {
+                Navigator.pop(context);
+                // Handle Share action
+              }),
+              _buildGridMenuItem(Icons.exit_to_app, 'Logout', () {
+                Navigator.pop(context);
+                // Handle Logout action
+              }),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildGridMenuItem(IconData icon, String label, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 40, color: primary),
+          SizedBox(height: 10),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: black,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -71,18 +133,19 @@ class _AllPageState extends State<AllPage> {
     return Scaffold(
       backgroundColor: grey.withOpacity(0.05),
       body: OverlayLoaderWithAppIcon(
-          isLoading: loading,
-          overlayOpacity: 0.7,
-          appIconSize: 50,
-          circularProgressColor: Colors.purple,
-          overlayBackgroundColor: Colors.black,
-          appIcon: Image.asset("assets/logo.png"),
-          child: _buildProjectTimeline()),
+        isLoading: loading,
+        overlayOpacity: 0.7,
+        appIconSize: 50,
+        circularProgressColor: Colors.purple,
+        overlayBackgroundColor: Colors.black,
+        appIcon: Image.asset("assets/logo.png"),
+        child: _buildProjectTimeline(),
+      ),
     );
   }
 
   Widget _buildProjectTimeline() {
-    List<dynamic> filteredTasks = _getFilteredTasks();  // Get filtered tasks based on selection
+    List<dynamic> filteredTasks = _getFilteredTasks();
 
     return Column(
       children: [
@@ -109,11 +172,16 @@ class _AllPageState extends State<AllPage> {
                     Row(
                       children: [
                         GestureDetector(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(tasks: filteredTasks) ));
-                            },
-                            child: Icon(Icons.search)),
-                        Icon(Icons.more_vert),
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(tasks: filteredTasks)));
+                          },
+                          child: const Icon(Icons.search),
+                        ),
+                        const SizedBox(width: 20),
+                        GestureDetector(
+                          onTap: _showGridMenu,
+                          child: Icon(Icons.more_vert),
+                        ),
                       ],
                     )
                   ],
@@ -152,7 +220,6 @@ class _AllPageState extends State<AllPage> {
                     }),
                   ),
                 ),
-
               ],
             ),
           ),
@@ -165,7 +232,7 @@ class _AllPageState extends State<AllPage> {
               var projectName = task['current']['project'];
               var taskName = task['current']['name'];
               var status = task['current']['status']['status'];
-              var color =  task['current']['status']['color'];
+              var color = task['current']['status']['color'];
               var taskId = task['_id']["\$oid"];
               var newColorCode = Color(int.parse(color.replaceFirst('#', '0xFF')));
 
@@ -222,7 +289,7 @@ class _AllPageState extends State<AllPage> {
                           margin: EdgeInsets.symmetric(horizontal: 5),
                           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           decoration: BoxDecoration(
-                            color: newColorCode ,
+                            color: newColorCode,
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: Text(
@@ -233,7 +300,7 @@ class _AllPageState extends State<AllPage> {
                               color: white,
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -244,4 +311,5 @@ class _AllPageState extends State<AllPage> {
         ),
       ],
     );
-  }}
+  }
+}

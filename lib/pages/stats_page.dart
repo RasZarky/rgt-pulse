@@ -511,206 +511,7 @@ class _StatsPageState extends State<StatsPage> {
               ),
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
-          // Add the new time series chart for Task Updates Over Time
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Container(
-              width: double.infinity,
-              height: 300,
-              decoration: BoxDecoration(
-                  color: white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: grey.withOpacity(0.01),
-                      spreadRadius: 10,
-                      blurRadius: 3,
-                    ),
-                  ]),
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Task Updates Over Time",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: black),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showBottomSheet(
-                              "Task Updates Over Time",
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: List.generate(
-                                      updatesOverTime.length, (index) {
-                                    return FadeInUp(
-                                      child: Padding(
-                                        padding:
-                                        const EdgeInsets.only(bottom: 10),
-                                        child: Container(
-                                          width: double.infinity, // Full width
-                                          decoration: BoxDecoration(
-                                            color: primary.withOpacity(.4),
-                                            borderRadius:
-                                            BorderRadius.circular(12),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.01),
-                                                spreadRadius: 10,
-                                                blurRadius: 3,
-                                              ),
-                                            ],
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5),
-                                            child: Row(
-                                              children: [
-                                                const SizedBox(width: 20),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      timeago.format(updatesOverTime.keys
-                                                          .elementAt(index))
-                                                      ,
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        fontSize: 16,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 5),
-                                                    Text(
-                                                      "${
-                                                          updatesOverTime.values
-                                                              .elementAt(index)
-                                                              .toString()
-                                                      } tasks",
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.w500,
-                                                        fontSize: 14,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Icon(Icons.more_vert),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: LineChart(
-                        LineChartData(
-                          lineBarsData: [
-                            LineChartBarData(
-                              spots: updatesOverTime.entries
-                                  .toList() // Convert entries to a list
-                                  .map((entry) => FlSpot(
-                                      entry.key.millisecondsSinceEpoch
-                                          .toDouble(),
-                                      entry.value.toDouble()))
-                                  .toList(),
-                              isCurved: true,
-                              color: Colors.blue,
-                              barWidth: 4,
-                              isStrokeCapRound: true,
-                              dotData: FlDotData(show: true),
-                              belowBarData: BarAreaData(show: true),
-                            ),
-                          ],
-                          borderData: FlBorderData(
-                            show: false,
-                            border: Border.all(color: Colors.grey, width: 1),
-                          ),
-                          titlesData: FlTitlesData(
-                            leftTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                  reservedSize: 44, showTitles: true),
-                            ),
-                            rightTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                  reservedSize: 44, showTitles: false),
-                            ),
-                            topTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                  reservedSize: 44, showTitles: false),
-                            ),
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                reservedSize: 44,
-                                showTitles: true,
-                                getTitlesWidget: (value, meta) {
-                                  DateTime date =
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          value.toInt());
-                                  return Text(
-                                    DateFormat('MM/dd').format(date),
-                                    style:
-                                        TextStyle(color: black, fontSize: 10),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          lineTouchData: LineTouchData(
-                            touchTooltipData: LineTouchTooltipData(
-                              getTooltipItems:
-                                  (List<LineBarSpot> touchedBarSpots) {
-                                return touchedBarSpots.map((lineBarSpot) {
-                                  final date =
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          lineBarSpot.x.toInt());
-                                  final formattedDate =
-                                      DateFormat('MM/dd/yyyy').format(date);
-                                  return LineTooltipItem(
-                                    '$formattedDate\nUpdates: ${lineBarSpot.y.toInt()}',
-                                    TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  );
-                                }).toList();
-                              },
-                            ),
-                            touchSpotThreshold: 10,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+
           SizedBox(
             height: 20,
           ),
@@ -1335,6 +1136,206 @@ class _StatsPageState extends State<StatsPage> {
                                 showTitles: false,
                               ),
                             ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          // Add the new time series chart for Task Updates Over Time
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Container(
+              width: double.infinity,
+              height: 300,
+              decoration: BoxDecoration(
+                  color: white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: grey.withOpacity(0.01),
+                      spreadRadius: 10,
+                      blurRadius: 3,
+                    ),
+                  ]),
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Task Updates Over Time",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: black),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            showBottomSheet(
+                              "Task Updates Over Time",
+                              Padding(
+                                padding:
+                                const EdgeInsets.symmetric(horizontal: 20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: List.generate(
+                                      updatesOverTime.length, (index) {
+                                    return FadeInUp(
+                                      child: Padding(
+                                        padding:
+                                        const EdgeInsets.only(bottom: 10),
+                                        child: Container(
+                                          width: double.infinity, // Full width
+                                          decoration: BoxDecoration(
+                                            color: primary.withOpacity(.4),
+                                            borderRadius:
+                                            BorderRadius.circular(12),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey
+                                                    .withOpacity(0.01),
+                                                spreadRadius: 10,
+                                                blurRadius: 3,
+                                              ),
+                                            ],
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: Row(
+                                              children: [
+                                                const SizedBox(width: 20),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      timeago.format(updatesOverTime.keys
+                                                          .elementAt(index))
+                                                      ,
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                        fontSize: 16,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 5),
+                                                    Text(
+                                                      "${
+                                                          updatesOverTime.values
+                                                              .elementAt(index)
+                                                              .toString()
+                                                      } tasks",
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                        FontWeight.w500,
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ),
+                            );
+                          },
+                          child: const Icon(Icons.more_vert),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: LineChart(
+                        LineChartData(
+                          lineBarsData: [
+                            LineChartBarData(
+                              spots: updatesOverTime.entries
+                                  .toList() // Convert entries to a list
+                                  .map((entry) => FlSpot(
+                                  entry.key.millisecondsSinceEpoch
+                                      .toDouble(),
+                                  entry.value.toDouble()))
+                                  .toList(),
+                              isCurved: true,
+                              color: Colors.blue,
+                              barWidth: 4,
+                              isStrokeCapRound: true,
+                              dotData: FlDotData(show: true),
+                              belowBarData: BarAreaData(show: true),
+                            ),
+                          ],
+                          borderData: FlBorderData(
+                            show: false,
+                            border: Border.all(color: Colors.grey, width: 1),
+                          ),
+                          titlesData: FlTitlesData(
+                            leftTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                  reservedSize: 44, showTitles: true),
+                            ),
+                            rightTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                  reservedSize: 44, showTitles: false),
+                            ),
+                            topTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                  reservedSize: 44, showTitles: false),
+                            ),
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                reservedSize: 44,
+                                showTitles: true,
+                                getTitlesWidget: (value, meta) {
+                                  DateTime date =
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      value.toInt());
+                                  return Text(
+                                    DateFormat('MM/dd').format(date),
+                                    style:
+                                    TextStyle(color: black, fontSize: 10),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                          lineTouchData: LineTouchData(
+                            touchTooltipData: LineTouchTooltipData(
+                              getTooltipItems:
+                                  (List<LineBarSpot> touchedBarSpots) {
+                                return touchedBarSpots.map((lineBarSpot) {
+                                  final date =
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      lineBarSpot.x.toInt());
+                                  final formattedDate =
+                                  DateFormat('MM/dd/yyyy').format(date);
+                                  return LineTooltipItem(
+                                    '$formattedDate\nUpdates: ${lineBarSpot.y.toInt()}',
+                                    TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                }).toList();
+                              },
+                            ),
+                            touchSpotThreshold: 10,
                           ),
                         ),
                       ),

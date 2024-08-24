@@ -36,8 +36,19 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
     _loadActivities();
   }
 
-  String _formatDate(String dateStr) {
+  String _formatDate(var dateStr) {
     if (dateStr.isEmpty) return "";
+    try {
+      var lastUpdatedDate = dateStr;
+      if (lastUpdatedDate is String) {
+        return timeago.format(DateTime.parse(lastUpdatedDate));
+      } else if (lastUpdatedDate is int) {
+        return timeago.format(DateTime.fromMillisecondsSinceEpoch(lastUpdatedDate)).toString();
+      }
+        } catch (e) {
+      return "not available";
+    }
+
     try {
       DateTime dateTime = DateTime.parse(dateStr);
       return DateFormat('dd MMM yy').format(dateTime);
@@ -79,8 +90,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
       context: context,
       builder: (BuildContext context) {
         // Extract due date and estimate from the matchedTask
-        String dueDate = matchedTask?['current']['due_date'] != null
-            ? _formatDate(matchedTask!['current']['due_date']['\$date'])
+        var dueDate = matchedTask?['current']['due_date'] != null
+            ? _formatDate(matchedTask!['current']['due_date'].toString())
             : "N/A";
         String estimate = matchedTask?['current']['estimate'] ?? "N/A";
         String sprint = matchedTask?['sprint']['name'] ?? "N/A";
