@@ -46,10 +46,8 @@ class _RootAppState extends State<RootApp> {
             },
             shape: const CircleBorder(),
             backgroundColor: primary,
-            child: const Icon(
-              Icons.add,
-              size: 25,
-              color: Colors.white,
+            child:  Image.asset(
+              "assets/logo_c.png",
             )
             //params
             ),
