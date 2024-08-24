@@ -5,12 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
 import 'package:rgt_pulse/theme/colors.dart';
 
-class BudgetPage extends StatefulWidget {
+class LeaderboardPage extends StatefulWidget {
   @override
-  _BudgetPageState createState() => _BudgetPageState();
+  _LeaderboardPageState createState() => _LeaderboardPageState();
 }
 
-class _BudgetPageState extends State<BudgetPage> {
+class _LeaderboardPageState extends State<LeaderboardPage> {
   bool loading = true;
   List<Map<String, dynamic>> leaderboardData = [];
 
