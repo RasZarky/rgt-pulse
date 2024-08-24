@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
+import 'package:rgt_pulse/theme/colors.dart';
 
 class TaskListPage extends StatefulWidget {
   @override
@@ -52,9 +53,6 @@ class _TaskListPageState extends State<TaskListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Task Activities'),
-      ),
       body: OverlayLoaderWithAppIcon(
         isLoading: loading,
         overlayOpacity: 0.7,
@@ -68,6 +66,44 @@ class _TaskListPageState extends State<TaskListPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Container(
+                  decoration: BoxDecoration(color: white, boxShadow: [
+                    BoxShadow(
+                      color: grey.withOpacity(0.01),
+                      spreadRadius: 10,
+                      blurRadius: 3,
+                    ),
+                  ]),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 30, right: 20, left: 20, bottom: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Image.asset("assets/logo.png", height: 70, width: 70),
+                            const Text(
+                              "Easter EGG",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: black),
+                            ),
+                            Icon(Icons.egg)
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 0,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 Text('Number of Tasks: ${tasks.length}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 SizedBox(height: 10),
                 Text('Number of Projects: ${projects.length}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),

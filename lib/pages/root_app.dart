@@ -67,8 +67,8 @@ class _RootAppState extends State<RootApp> {
   Widget getFooter() {
     List<IconData> iconItems = [
       Icons.calendar_month_outlined,
-      Icons.bar_chart,
-      Icons.wallet,
+      Icons.area_chart,
+      Icons.people,
       Icons.person,
     ];
 
