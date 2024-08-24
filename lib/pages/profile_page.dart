@@ -306,7 +306,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 onTap: (){
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => TaskListPage() ));
                                 } ,
-                                child: Text(
+                                child: const Text(
                                   "⚠️ Geek Score Calculation ⚠️",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
@@ -314,8 +314,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                       color: white),
                                 ),
                               ),
-                              SizedBox(height: 5),
-                              Text(
+                              const SizedBox(height: 5),
+                              const Text(
                                 "Your Geek Score is calculated by measuring \n"
                                     "the ratio of rejected and approved tasks \n"
                                     "of projects you collaborate on.\n"

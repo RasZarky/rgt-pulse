@@ -1,9 +1,9 @@
-
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-
-import '../json/budget_json.dart';
-import '../json/day_month.dart';
-import '../theme/colors.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
+import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
+import 'package:rgt_pulse/theme/colors.dart';
 
 class BudgetPage extends StatefulWidget {
   @override
@@ -11,18 +11,104 @@ class BudgetPage extends StatefulWidget {
 }
 
 class _BudgetPageState extends State<BudgetPage> {
-  int activeDay = 3;
+  bool loading = true;
+  List<Map<String, dynamic>> leaderboardData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    setState(() {
+      loading = true;
+    });
+
+    // Load JSON from file
+    String jsonString = await rootBundle.loadString('assets/jesse.task_activities.json');
+    List<dynamic> jsonData = json.decode(jsonString);
+
+    // Dictionary to store user data and tasks
+    Map<int, Map<String, dynamic>> userMap = {};
+
+    for (var task in jsonData) {
+      var current = task['current'];
+      var collaborators = current['collaborators'];
+
+      for (var collaborator in collaborators) {
+        int userId = collaborator['id'];
+        String userName = collaborator['username'];
+        String? userPic = collaborator['profilePicture'];
+        String? userColor = collaborator['color']; // Retrieve user color
+
+        // Debugging: Print the retrieved color
+        print("User: $userName, Color: $userColor");
+
+        if (!userMap.containsKey(userId)) {
+          userMap[userId] = {
+            'id': userId,
+            'username': userName,
+            'profilePicture': userPic,
+            'color': userColor, // Store user color
+            'tasks': [],
+          };
+        }
+        userMap[userId]?['tasks'].add(current);
+      }
+    }
+
+    // Calculate geek scores
+    List<Map<String, dynamic>> userList = [];
+    userMap.forEach((userId, userData) {
+      int totalTasks = userData['tasks'].length;
+      int tasksWithoutSpecifiedStatus = 0;
+
+      for (var task in userData['tasks']) {
+        String status = task['status']['status'];
+        if (status != 'to do' && status != 'in progress' && status != 'reject') {
+          tasksWithoutSpecifiedStatus++;
+        }
+      }
+
+      double geekScore = totalTasks > 0
+          ? (tasksWithoutSpecifiedStatus / totalTasks) * 100
+          : 0;
+
+      userList.add({
+        'id': userData['id'],
+        'username': userData['username'],
+        'profilePicture': userData['profilePicture'],
+        'color': userData['color'], // Include user color
+        'geekScore': geekScore,
+      });
+    });
+
+    // Sort by geek score
+    userList.sort((a, b) => b['geekScore'].compareTo(a['geekScore']));
+
+    setState(() {
+      leaderboardData = userList;
+      loading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: grey.withOpacity(0.05),
-      body: getBody(),
+      backgroundColor: Colors.grey.withOpacity(0.05),
+      body: OverlayLoaderWithAppIcon(
+          isLoading: loading,
+          overlayOpacity: 0.7,
+          appIconSize: 50,
+          circularProgressColor: Colors.purple,
+          overlayBackgroundColor: Colors.black,
+          appIcon: Image.asset("assets/logo.png"),
+          child: getBody()),
     );
   }
 
   Widget getBody() {
-    var size = MediaQuery.of(context).size;
-
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -32,201 +118,125 @@ class _BudgetPageState extends State<BudgetPage> {
                 color: grey.withOpacity(0.01),
                 spreadRadius: 10,
                 blurRadius: 3,
-                // changes position of shadow
               ),
             ]),
             child: Padding(
               padding: const EdgeInsets.only(
-                  top: 60, right: 20, left: 20, bottom: 25),
+                  top: 30, right: 20, left: 20, bottom: 10),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "Budget",
+                      Image.asset("assets/logo.png", height: 70, width: 70),
+                      const Text(
+                        "LEADERBOARD",
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: black),
                       ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.add,
-                            size: 25,
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Icon(Icons.search)
-                        ],
-                      )
+                      Icon(Icons.wine_bar)
                     ],
                   ),
-                  SizedBox(
-                    height: 25,
+                  const SizedBox(
+                    height: 0,
                   ),
-                  Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(months.length, (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              activeDay = index;
-                            });
-                          },
-                          child: Container(
-                            width: (MediaQuery.of(context).size.width - 40) / 6,
-                            child: Column(
-                              children: [
-                                Text(
-                                  months[index]['label'],
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      color: activeDay == index
-                                          ? primary
-                                          : black.withOpacity(0.02),
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                          color: activeDay == index
-                                              ? primary
-                                              : black.withOpacity(0.1))),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 12, right: 12, top: 7, bottom: 7),
-                                    child: Text(
-                                      months[index]['day'],
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w600,
-                                          color: activeDay == index
-                                              ? white
-                                              : black),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      }))
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '⚠️ Only users who are collaborators on tasks appear on leaderboard.',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+
+                      Text(
+                        '⚠️ Collaborate and gain more stats to appear on leaderboard',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
+          SizedBox(height: 10),
           Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
-                children: List.generate(budget_json.length, (index) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: grey.withOpacity(0.01),
-                          spreadRadius: 10,
-                          blurRadius: 3,
-                          // changes position of shadow
-                        ),
-                      ]),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(leaderboardData.length, (index) {
+                String? colorHex = leaderboardData[index]['color'];
+                Color containerColor = colorHex != null
+                    ? Color(int.parse(colorHex.replaceAll('#', '0xff')))
+                    : green; // Fallback color if null
+
+                return FadeInUp(
                   child: Padding(
-                    padding: EdgeInsets.only(
-                        left: 25, right: 25, bottom: 25, top: 25),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          budget_json[index]['name'],
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 13,
-                              color: Color(0xff67727d).withOpacity(0.6)),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: containerColor, // Use retrieved color
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.01),
+                            spreadRadius: 10,
+                            blurRadius: 3,
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(25),
+                        child: Row(
                           children: [
-                            Row(
+                            Text(
+                              '${index + 1}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            CircleAvatar(
+                              backgroundImage: leaderboardData[index]['profilePicture'] != null
+                                  ? NetworkImage(leaderboardData[index]['profilePicture'])
+                                  : const AssetImage("assets/images/profile.jpg"),
+                            ),
+                            const SizedBox(width: 20),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  budget_json[index]['price'],
-                                  style: TextStyle(
+                                  leaderboardData[index]['username'],
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 20,
+                                    fontSize: 16,
+                                    color: Colors.black,
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 3),
-                                  child: Text(
-                                    budget_json[index]['label_percentage'],
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 13,
-                                        color:
-                                            Color(0xff67727d).withOpacity(0.6)),
+                                SizedBox(height: 5),
+                                Text(
+                                  'Geek Score: ${leaderboardData[index]['geekScore'].toStringAsFixed(2)}%',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 3),
-                              child: Text(
-                                "\$5000.00",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 13,
-                                    color: Color(0xff67727d).withOpacity(0.6)),
-                              ),
-                            ),
                           ],
                         ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Stack(
-                          children: [
-                            Container(
-                              width: (size.width - 40),
-                              height: 4,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Color(0xff67727d).withOpacity(0.1)),
-                            ),
-                            Container(
-                              width: (size.width - 40) *
-                                  budget_json[index]['percentage'],
-                              height: 4,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: budget_json[index]['color']),
-                            ),
-                          ],
-                        )
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            })),
-          )
+                );
+              }),
+            ),
+          ),
         ],
       ),
     );
