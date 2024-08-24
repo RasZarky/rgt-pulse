@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
 import 'package:rgt_pulse/pages/all_stats_page.dart';
+import 'package:rgt_pulse/pages/collaborators_page.dart';
 import 'package:rgt_pulse/pages/leaderboard_page.dart';
 import 'package:rgt_pulse/pages/search_page.dart';
 import 'package:rgt_pulse/pages/task_detail_page.dart';
@@ -82,7 +83,7 @@ class _AllPageState extends State<AllPage> {
                 // Handle Project Info action
               }),
               _buildGridMenuItem(Icons.supervised_user_circle_outlined, 'Collaborators', () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => LeaderboardPage() ));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CollaboratorsPage() ));
                 // Handle Filter Tasks action
               }),
               _buildGridMenuItem(Icons.settings, 'Settings', () {

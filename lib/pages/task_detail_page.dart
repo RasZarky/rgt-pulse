@@ -43,9 +43,11 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
       if (lastUpdatedDate is String) {
         return timeago.format(DateTime.parse(lastUpdatedDate));
       } else if (lastUpdatedDate is int) {
-        return timeago.format(DateTime.fromMillisecondsSinceEpoch(lastUpdatedDate)).toString();
+        return timeago
+            .format(DateTime.fromMillisecondsSinceEpoch(lastUpdatedDate))
+            .toString();
       }
-        } catch (e) {
+    } catch (e) {
       return "not available";
     }
 
@@ -60,7 +62,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   Future<void> _loadActivities() async {
     // Load JSON from file
     String jsonString =
-    await rootBundle.loadString('assets/jesse.task_activities.json');
+        await rootBundle.loadString('assets/jesse.task_activities.json');
     List<dynamic> jsonData = json.decode(jsonString);
 
     // Find the task with the matching tasktId
@@ -68,7 +70,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
       if (task['_id']["\$oid"] == widget.tasktId) {
         matchedTask = task; // Save the entire task
         activities = task['activities'] ?? []; // Save the activities list
-        collaborators = task['current']['collaborators'] ?? []; // Save the collaborators list
+        collaborators = task['current']['collaborators'] ??
+            []; // Save the collaborators list
         break;
       }
     }
@@ -97,11 +100,10 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
         String sprint = matchedTask?['sprint']['name'] ?? "N/A";
 
         return AlertDialog(
-          title: const Text('More Task Details',
+          title: const Text(
+            'More Task Details',
             style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: black),
+                fontSize: 20, fontWeight: FontWeight.bold, color: black),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -142,7 +144,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
         if (lastUpdatedDate is String) {
           lastUpdated = timeago.format(DateTime.parse(lastUpdatedDate));
         } else if (lastUpdatedDate is int) {
-          lastUpdated = timeago.format(DateTime.fromMillisecondsSinceEpoch(lastUpdatedDate));
+          lastUpdated = timeago
+              .format(DateTime.fromMillisecondsSinceEpoch(lastUpdatedDate));
         }
       } else {
         lastUpdated = "not available";
@@ -205,7 +208,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       textAlign: TextAlign.center,
                       onLinkTap: (url) {
                         if (matchedTask?["current"]["web_url"] != null) {
-                          launchUrl(Uri.parse(matchedTask?["current"]["web_url"]));
+                          launchUrl(
+                              Uri.parse(matchedTask?["current"]["web_url"]));
                         }
                       },
                     ),
@@ -222,7 +226,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                       children: [
                         Container(
                           margin: EdgeInsets.symmetric(horizontal: 5),
-                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           decoration: BoxDecoration(
                             color: newColorCode,
                             borderRadius: BorderRadius.circular(5),
@@ -238,7 +243,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         ),
                         Container(
                           margin: EdgeInsets.symmetric(horizontal: 5),
-                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           decoration: BoxDecoration(
                             color: primary,
                             borderRadius: BorderRadius.circular(5),
@@ -270,7 +276,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
 
                           return Container(
                             margin: EdgeInsets.symmetric(horizontal: 5),
-                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
                               color: bgColor,
                               borderRadius: BorderRadius.circular(5),
@@ -305,54 +312,61 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: activities.length,
-                itemBuilder: (context, index) {
-                  var activity = activities[index];
-                  var eventDate = DateTime.parse(activity['date']['\$date']);
-                  var formattedDate = timeago.format(eventDate);
+              child: activities.isEmpty
+                  ? Image.asset(
+                      "assets/images/noData.png",
+                      fit: BoxFit.cover,
+                    )
+                  : ListView.builder(
+                      itemCount: activities.length,
+                      itemBuilder: (context, index) {
+                        var activity = activities[index];
+                        var eventDate =
+                            DateTime.parse(activity['date']['\$date']);
+                        var formattedDate = timeago.format(eventDate);
 
-                  return TimelineTile(
-                    alignment: TimelineAlign.manual,
-                    lineXY: 0.1,
-                    isFirst: index == 0,
-                    isLast: index == activities.length - 1,
-                    indicatorStyle: IndicatorStyle(
-                      width: 20,
-                      color: primary,
-                      padding: EdgeInsets.all(8),
-                    ),
-                    beforeLineStyle: LineStyle(
-                      color: grey.withOpacity(0.5),
-                      thickness: 2,
-                    ),
-                    endChild: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Event: ${activity['event'] ?? "N/A"}',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                        return TimelineTile(
+                          alignment: TimelineAlign.manual,
+                          lineXY: 0.1,
+                          isFirst: index == 0,
+                          isLast: index == activities.length - 1,
+                          indicatorStyle: IndicatorStyle(
+                            width: 20,
+                            color: primary,
+                            padding: EdgeInsets.all(8),
                           ),
-                          SizedBox(height: 5),
-                          Text(
-                            'Updated by: ${activity['update_by'] ?? "N/A"}',
-                            style: const TextStyle(color: Colors.grey),
+                          beforeLineStyle: LineStyle(
+                            color: grey.withOpacity(0.5),
+                            thickness: 2,
                           ),
-                          SizedBox(height: 5),
-                          Text(
-                            'Date: $formattedDate',
-                            style: const TextStyle(color: Colors.grey),
+                          endChild: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Event: ${activity['event'] ?? "N/A"}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  'Updated by: ${activity['update_by'] ?? "N/A"}',
+                                  style: const TextStyle(color: Colors.grey),
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  'Date: $formattedDate',
+                                  style: const TextStyle(color: Colors.grey),
+                                ),
+                                SizedBox(height: 5),
+                                _buildActivityDetails(activity['update']),
+                              ],
+                            ),
                           ),
-                          SizedBox(height: 5),
-                          _buildActivityDetails(activity['update']),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           ],
         ),

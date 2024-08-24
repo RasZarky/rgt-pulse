@@ -178,7 +178,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         Expanded(
-          child: ListView.builder(
+          child: filteredTasks.isEmpty ? 
+          Image.asset("assets/images/noData.png", fit: BoxFit.cover,)    
+          : ListView.builder(
             itemCount: filteredTasks.length,
             itemBuilder: (context, index) {
               var task = filteredTasks[index];

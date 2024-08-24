@@ -242,1114 +242,1124 @@ class _StatsPageState extends State<StatsPage> {
         assignmentEvents.values.fold(0, (a, b) => a + b);
     final totalActivityTypes = activityTypes.values.fold(0, (a, b) => a + b);
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(color: white, boxShadow: [
-              BoxShadow(
-                color: grey.withOpacity(0.01),
-                spreadRadius: 10,
-                blurRadius: 3,
-              ),
-            ]),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 30, right: 20, left: 20, bottom: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image.asset("assets/logo.png", height: 70, width: 70),
-                      const Text(
-                        "My Projects Stats",
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: black),
-                      ),
-                      Icon(Icons.filter_alt)
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 0,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        '⚠️ Below are stats of projects you collaborated on.',
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Total Projects Count: ${projectNames.length}',
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'Total Tasks: $totalTasks',
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'Total Updates Over Time: $totalUpdates',
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'Total Assignment Event: $totalAssignmentEvents',
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'Total Activity Count: $totalActivityTypes',
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Text(
-                        '⚠️ Tap on line or bar chart for more info',
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(color: white, boxShadow: [
+            BoxShadow(
+              color: grey.withOpacity(0.01),
+              spreadRadius: 10,
+              blurRadius: 3,
             ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Container(
-              width: double.infinity,
-              height: 300,
-              decoration: BoxDecoration(
-                  color: white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: grey.withOpacity(0.01),
-                      spreadRadius: 10,
-                      blurRadius: 3,
+          ]),
+          child: Padding(
+            padding: const EdgeInsets.only(
+                top: 30, right: 20, left: 20, bottom: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset("assets/logo.png", height: 70, width: 70),
+                    const Text(
+                      "My Projects Stats",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: black),
                     ),
-                  ]),
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
+                    Icon(Icons.filter_alt)
+                  ],
+                ),
+                const SizedBox(
+                  height: 0,
+                ),
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Task Count by Status",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: black),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showBottomSheet(
-                              "Task Count by Status",
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: List.generate(
-                                      taskCountByStatus.length, (index) {
-                                    return FadeInUp(
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 10),
-                                        child: Container(
-                                          width: double.infinity, // Full width
-                                          decoration: BoxDecoration(
-                                            color: primary.withOpacity(.4),
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.01),
-                                                spreadRadius: 10,
-                                                blurRadius: 3,
-                                              ),
-                                            ],
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5),
-                                            child: Row(
-                                              children: [
-                                                const SizedBox(width: 20),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      taskCountByStatus.keys
-                                                          .elementAt(index),
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 16,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 5),
-                                                    Text(
-                                                      "${
-                                                        taskCountByStatus.values
-                                                            .elementAt(index)
-                                                            .toString()
-                                                      } tasks",
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontSize: 14,
-                                                        color: Colors.white,
-                                                      ),
+                    const Text(
+                      '⚠️ Below are stats of projects you collaborated on.',
+                      style: TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Total Projects Count: ${projectNames.length}',
+                      style: TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Total Tasks: $totalTasks',
+                      style: TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Total Updates Over Time: $totalUpdates',
+                      style: TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Total Assignment Event: $totalAssignmentEvents',
+                      style: TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Total Activity Count: $totalActivityTypes',
+                      style: TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text(
+                      '⚠️ Tap on line or bar chart for more info',
+                      style: TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        Expanded(
+          child: tasks.isEmpty ?
+          Image.asset("assets/images/noData.png", fit: BoxFit.cover,)
+              : SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Container(
+                    width: double.infinity,
+                    height: 300,
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: grey.withOpacity(0.01),
+                            spreadRadius: 10,
+                            blurRadius: 3,
+                          ),
+                        ]),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Task Count by Status",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: black),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showBottomSheet(
+                                    "Task Count by Status",
+                                    Padding(
+                                      padding:
+                                      const EdgeInsets.symmetric(horizontal: 20),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: List.generate(
+                                            taskCountByStatus.length, (index) {
+                                          return FadeInUp(
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(bottom: 10),
+                                              child: Container(
+                                                width: double.infinity, // Full width
+                                                decoration: BoxDecoration(
+                                                  color: primary.withOpacity(.4),
+                                                  borderRadius:
+                                                  BorderRadius.circular(12),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.01),
+                                                      spreadRadius: 10,
+                                                      blurRadius: 3,
                                                     ),
                                                   ],
                                                 ),
-                                              ],
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(5),
+                                                  child: Row(
+                                                    children: [
+                                                      const SizedBox(width: 20),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            taskCountByStatus.keys
+                                                                .elementAt(index),
+                                                            style: const TextStyle(
+                                                              fontWeight:
+                                                              FontWeight.bold,
+                                                              fontSize: 16,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(height: 5),
+                                                          Text(
+                                                            "${
+                                                                taskCountByStatus.values
+                                                                    .elementAt(index)
+                                                                    .toString()
+                                                            } tasks",
+                                                            style: const TextStyle(
+                                                              fontWeight:
+                                                              FontWeight.w500,
+                                                              fontSize: 14,
+                                                              color: Colors.white,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
+                                          );
+                                        }),
                                       ),
-                                    );
-                                  }),
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Icon(Icons.more_vert),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 30),
-                    Expanded(
-                      child: LineChart(
-                        LineChartData(
-                          lineBarsData: [
-                            LineChartBarData(
-                              spots: taskCountByStatus.entries
-                                  .toList() // Convert entries to a list
-                                  .asMap()
-                                  .entries
-                                  .map((entry) => FlSpot(entry.key.toDouble(),
-                                      entry.value.value.toDouble()))
-                                  .toList(),
-                              isCurved: true,
-                              color: primary,
-                              barWidth: 4,
-                              isStrokeCapRound: true,
-                              dotData: FlDotData(show: true),
-                              belowBarData: BarAreaData(show: true),
-                            ),
-                          ],
-                          borderData: FlBorderData(
-                            show: false,
-                            border: Border.all(color: Colors.grey, width: 1),
-                          ),
-                          titlesData: const FlTitlesData(
-                            leftTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                  reservedSize: 44, showTitles: true),
-                            ),
-                            rightTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                  reservedSize: 44, showTitles: false),
-                            ),
-                            topTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                  reservedSize: 44, showTitles: false),
-                            ),
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                  reservedSize: 44, showTitles: false),
-                            ),
-                          ),
-                          lineTouchData: LineTouchData(
-                            touchTooltipData: LineTouchTooltipData(
-                              getTooltipItems:
-                                  (List<LineBarSpot> touchedBarSpots) {
-                                return touchedBarSpots.map((lineBarSpot) {
-                                  final index = lineBarSpot.spotIndex.toInt();
-                                  final status =
-                                      taskCountByStatus.keys.elementAt(index);
-                                  final count = taskCountByStatus[status];
-                                  return LineTooltipItem(
-                                    '$status\nCount: $count',
-                                    TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
                                     ),
                                   );
-                                }).toList();
-                              },
-                            ),
-                            touchSpotThreshold: 10,
+                                },
+                                child: const Icon(Icons.more_vert),
+                              ),
+                            ],
                           ),
-                        ),
+                          const SizedBox(height: 30),
+                          Expanded(
+                            child: LineChart(
+                              LineChartData(
+                                lineBarsData: [
+                                  LineChartBarData(
+                                    spots: taskCountByStatus.entries
+                                        .toList() // Convert entries to a list
+                                        .asMap()
+                                        .entries
+                                        .map((entry) => FlSpot(entry.key.toDouble(),
+                                        entry.value.value.toDouble()))
+                                        .toList(),
+                                    isCurved: true,
+                                    color: primary,
+                                    barWidth: 4,
+                                    isStrokeCapRound: true,
+                                    dotData: FlDotData(show: true),
+                                    belowBarData: BarAreaData(show: true),
+                                  ),
+                                ],
+                                borderData: FlBorderData(
+                                  show: false,
+                                  border: Border.all(color: Colors.grey, width: 1),
+                                ),
+                                titlesData: const FlTitlesData(
+                                  leftTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                        reservedSize: 44, showTitles: true),
+                                  ),
+                                  rightTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                        reservedSize: 44, showTitles: false),
+                                  ),
+                                  topTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                        reservedSize: 44, showTitles: false),
+                                  ),
+                                  bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                        reservedSize: 44, showTitles: false),
+                                  ),
+                                ),
+                                lineTouchData: LineTouchData(
+                                  touchTooltipData: LineTouchTooltipData(
+                                    getTooltipItems:
+                                        (List<LineBarSpot> touchedBarSpots) {
+                                      return touchedBarSpots.map((lineBarSpot) {
+                                        final index = lineBarSpot.spotIndex.toInt();
+                                        final status =
+                                        taskCountByStatus.keys.elementAt(index);
+                                        final count = taskCountByStatus[status];
+                                        return LineTooltipItem(
+                                          '$status\nCount: $count',
+                                          TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        );
+                                      }).toList();
+                                    },
+                                  ),
+                                  touchSpotThreshold: 10,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ),
 
-          SizedBox(
-            height: 20,
-          ),
-          // Add the new chart for Task Prioritization
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Container(
-              width: double.infinity,
-              height: 300, // Height to accommodate the pie chart
-              decoration: BoxDecoration(
-                  color: white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: grey.withOpacity(0.01),
-                      spreadRadius: 10,
-                      blurRadius: 3,
-                    ),
-                  ]),
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Task Prioritization",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: black),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showBottomSheet(
-                              "Task Prioritization",
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: List.generate(
-                                      taskCountByPriority.length, (index) {
-                                    return FadeInUp(
-                                      child: Padding(
-                                        padding:
-                                        const EdgeInsets.only(bottom: 10),
-                                        child: Container(
-                                          width: double.infinity, // Full width
-                                          decoration: BoxDecoration(
-                                            color: primary.withOpacity(.4),
-                                            borderRadius:
-                                            BorderRadius.circular(12),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.01),
-                                                spreadRadius: 10,
-                                                blurRadius: 3,
-                                              ),
-                                            ],
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5),
-                                            child: Row(
-                                              children: [
-                                                const SizedBox(width: 20),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      taskCountByPriority.keys
-                                                          .elementAt(index),
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        fontSize: 16,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 5),
-                                                    Text(
-                                                      "${
-                                                          taskCountByPriority.values
-                                                              .elementAt(index)
-                                                              .toString()
-                                                      } tasks",
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.w500,
-                                                        fontSize: 14,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Icon(Icons.more_vert),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: PieChart(
-                        PieChartData(
-                          sectionsSpace: 0,
-                          centerSpaceRadius: 20,
-                          sections: getPieChartSections(taskCountByPriority),
-                        ),
-                      ),
-                    ),
-                  ],
+                SizedBox(
+                  height: 20,
                 ),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          // Add the new bar chart for Task Assignment Events
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Container(
-              width: double.infinity,
-              height: 300, // Height to accommodate the bar chart
-              decoration: BoxDecoration(
-                  color: white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: grey.withOpacity(0.01),
-                      spreadRadius: 10,
-                      blurRadius: 3,
-                    ),
-                  ]),
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Task Assignment Events",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: black),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showBottomSheet(
-                              "Task Assignment Events",
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: List.generate(
-                                      assignmentEvents.length, (index) {
-                                    return FadeInUp(
-                                      child: Padding(
-                                        padding:
-                                        const EdgeInsets.only(bottom: 10),
-                                        child: Container(
-                                          width: double.infinity, // Full width
-                                          decoration: BoxDecoration(
-                                            color: primary.withOpacity(.4),
-                                            borderRadius:
-                                            BorderRadius.circular(12),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.01),
-                                                spreadRadius: 10,
-                                                blurRadius: 3,
-                                              ),
-                                            ],
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5),
-                                            child: Row(
-                                              children: [
-                                                const SizedBox(width: 20),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      assignmentEvents.keys
-                                                          .elementAt(index),
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        fontSize: 16,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 5),
-                                                    Text(
-                                                      "${
-                                                          assignmentEvents.values
-                                                              .elementAt(index)
-                                                              .toString()
-                                                      } tasks",
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.w500,
-                                                        fontSize: 14,
-                                                        color: Colors.white,
-                                                      ),
+                // Add the new chart for Task Prioritization
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Container(
+                    width: double.infinity,
+                    height: 300, // Height to accommodate the pie chart
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: grey.withOpacity(0.01),
+                            spreadRadius: 10,
+                            blurRadius: 3,
+                          ),
+                        ]),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Task Prioritization",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: black),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showBottomSheet(
+                                    "Task Prioritization",
+                                    Padding(
+                                      padding:
+                                      const EdgeInsets.symmetric(horizontal: 20),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: List.generate(
+                                            taskCountByPriority.length, (index) {
+                                          return FadeInUp(
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(bottom: 10),
+                                              child: Container(
+                                                width: double.infinity, // Full width
+                                                decoration: BoxDecoration(
+                                                  color: primary.withOpacity(.4),
+                                                  borderRadius:
+                                                  BorderRadius.circular(12),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.01),
+                                                      spreadRadius: 10,
+                                                      blurRadius: 3,
                                                     ),
                                                   ],
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Icon(Icons.more_vert),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: BarChart(
-                        BarChartData(
-                          barGroups: [
-                            BarChartGroupData(
-                              x: 0,
-                              barRods: [
-                                BarChartRodData(
-                                  toY: assignmentEvents['assignee_add']
-                                          ?.toDouble() ??
-                                      0,
-                                  color: Colors.green,
-                                  width: 20,
-                                  borderRadius: BorderRadius.zero,
-                                ),
-                              ],
-                            ),
-                            BarChartGroupData(
-                              x: 1,
-                              barRods: [
-                                BarChartRodData(
-                                  toY: assignmentEvents['assignee_rem']
-                                          ?.toDouble() ??
-                                      0,
-                                  color: Colors.red,
-                                  width: 20,
-                                  borderRadius: BorderRadius.zero,
-                                ),
-                              ],
-                            ),
-                          ],
-                          borderData: FlBorderData(
-                            show: false,
-                          ),
-                          titlesData: FlTitlesData(
-                            leftTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                reservedSize: 40,
-                                showTitles: true,
-                                getTitlesWidget: (value, meta) {
-                                  return Text(
-                                    value.toInt().toString(),
-                                    style: const TextStyle(
-                                        color: black, fontSize: 14),
-                                  );
-                                },
-                              ),
-                            ),
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                reservedSize: 40,
-                                showTitles: true,
-                                getTitlesWidget: (value, meta) {
-                                  String title = value.toInt() == 0
-                                      ? 'Add Assignee '
-                                      : ' Remove Assignee';
-                                  return Text(
-                                    title,
-                                    style: const TextStyle(
-                                        color: black, fontSize: 10),
-                                  );
-                                },
-                              ),
-                            ),
-                            topTitles: const AxisTitles(
-                              sideTitles: SideTitles(
-                                reservedSize: 40,
-                                showTitles: false,
-                              ),
-                            ),
-                            rightTitles: const AxisTitles(
-                              sideTitles: SideTitles(
-                                reservedSize: 40,
-                                showTitles: false,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-
-          // Add the new chart for Activity types
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Container(
-              width: double.infinity,
-              height: 300, // Height to accommodate the pie chart
-              decoration: BoxDecoration(
-                  color: white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: grey.withOpacity(0.01),
-                      spreadRadius: 10,
-                      blurRadius: 3,
-                    ),
-                  ]),
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Activity Types",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: black),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showBottomSheet(
-                              "Activity Types",
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: List.generate(
-                                      activityTypes.length, (index) {
-                                    return FadeInUp(
-                                      child: Padding(
-                                        padding:
-                                        const EdgeInsets.only(bottom: 10),
-                                        child: Container(
-                                          width: double.infinity, // Full width
-                                          decoration: BoxDecoration(
-                                            color: primary.withOpacity(.4),
-                                            borderRadius:
-                                            BorderRadius.circular(12),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.01),
-                                                spreadRadius: 10,
-                                                blurRadius: 3,
-                                              ),
-                                            ],
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5),
-                                            child: Row(
-                                              children: [
-                                                const SizedBox(width: 20),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      activityTypes.keys
-                                                          .elementAt(index),
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        fontSize: 16,
-                                                        color: Colors.black,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(5),
+                                                  child: Row(
+                                                    children: [
+                                                      const SizedBox(width: 20),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            taskCountByPriority.keys
+                                                                .elementAt(index),
+                                                            style: const TextStyle(
+                                                              fontWeight:
+                                                              FontWeight.bold,
+                                                              fontSize: 16,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(height: 5),
+                                                          Text(
+                                                            "${
+                                                                taskCountByPriority.values
+                                                                    .elementAt(index)
+                                                                    .toString()
+                                                            } tasks",
+                                                            style: const TextStyle(
+                                                              fontWeight:
+                                                              FontWeight.w500,
+                                                              fontSize: 14,
+                                                              color: Colors.white,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ),
-                                                    const SizedBox(height: 5),
-                                                    Text(
-                                                      "${
-                                                          activityTypes.values
-                                                              .elementAt(index)
-                                                              .toString()
-                                                      } tasks",
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.w500,
-                                                        fontSize: 14,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Icon(Icons.more_vert),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: PieChart(
-                        PieChartData(
-                          sectionsSpace: 0,
-                          centerSpaceRadius: 20,
-                          sections: getPieChartSections(activityTypes),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Container(
-              width: double.infinity,
-              height: 300, // Height to accommodate the bar chart
-              decoration: BoxDecoration(
-                  color: white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: grey.withOpacity(0.01),
-                      spreadRadius: 10,
-                      blurRadius: 3,
-                    ),
-                  ]),
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Project-Specific Task Distribution",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: black),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showBottomSheet(
-                              "Project-Specific Task Distribution",
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: List.generate(
-                                      getTaskCountByProject(tasks).length, (index) {
-                                    return FadeInUp(
-                                      child: Padding(
-                                        padding:
-                                        const EdgeInsets.only(bottom: 10),
-                                        child: Container(
-                                          width: double.infinity, // Full width
-                                          decoration: BoxDecoration(
-                                            color: primary.withOpacity(.4),
-                                            borderRadius:
-                                            BorderRadius.circular(12),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.01),
-                                                spreadRadius: 10,
-                                                blurRadius: 3,
                                               ),
-                                            ],
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5),
-                                            child: Row(
-                                              children: [
-                                                const SizedBox(width: 20),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      getTaskCountByProject(tasks).keys
-                                                          .elementAt(index),
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        fontSize: 16,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 5),
-                                                    Text(
-                                                      "${
-                                                          getTaskCountByProject(tasks).values
-                                                              .elementAt(index)
-                                                              .toString()
-                                                      } tasks",
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.w500,
-                                                        fontSize: 14,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
                                             ),
-                                          ),
-                                        ),
+                                          );
+                                        }),
                                       ),
-                                    );
-                                  }),
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Icon(Icons.more_vert),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: BarChart(
-                        BarChartData(
-                          barGroups:
-                              getBarChartGroups(getTaskCountByProject(tasks)),
-                          borderData: FlBorderData(
-                            show: false,
-                          ),
-                          titlesData: FlTitlesData(
-                            leftTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                reservedSize: 40,
-                                showTitles: true,
-                                getTitlesWidget: (value, meta) {
-                                  return Text(
-                                    value.toInt().toString(),
-                                    style: const TextStyle(
-                                        color: black, fontSize: 14),
-                                  );
-                                },
-                              ),
-                            ),
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                reservedSize: 40,
-                                showTitles: true,
-                                getTitlesWidget: (value, meta) {
-                                  final projectName =
-                                      getTaskCountByProject(tasks)
-                                          .keys
-                                          .toList()[value.toInt()];
-                                  return Text(
-                                    projectName,
-                                    style: const TextStyle(
-                                        color: black, fontSize: 10),
-                                  );
-                                },
-                              ),
-                            ),
-                            topTitles: const AxisTitles(
-                              sideTitles: SideTitles(
-                                reservedSize: 40,
-                                showTitles: false,
-                              ),
-                            ),
-                            rightTitles: const AxisTitles(
-                              sideTitles: SideTitles(
-                                reservedSize: 40,
-                                showTitles: false,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          // Add the new time series chart for Task Updates Over Time
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Container(
-              width: double.infinity,
-              height: 300,
-              decoration: BoxDecoration(
-                  color: white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: grey.withOpacity(0.01),
-                      spreadRadius: 10,
-                      blurRadius: 3,
-                    ),
-                  ]),
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Task Updates Over Time",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: black),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showBottomSheet(
-                              "Task Updates Over Time",
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: List.generate(
-                                      updatesOverTime.length, (index) {
-                                    return FadeInUp(
-                                      child: Padding(
-                                        padding:
-                                        const EdgeInsets.only(bottom: 10),
-                                        child: Container(
-                                          width: double.infinity, // Full width
-                                          decoration: BoxDecoration(
-                                            color: primary.withOpacity(.4),
-                                            borderRadius:
-                                            BorderRadius.circular(12),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.01),
-                                                spreadRadius: 10,
-                                                blurRadius: 3,
-                                              ),
-                                            ],
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5),
-                                            child: Row(
-                                              children: [
-                                                const SizedBox(width: 20),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      timeago.format(updatesOverTime.keys
-                                                          .elementAt(index))
-                                                      ,
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        fontSize: 16,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 5),
-                                                    Text(
-                                                      "${
-                                                          updatesOverTime.values
-                                                              .elementAt(index)
-                                                              .toString()
-                                                      } tasks",
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.w500,
-                                                        fontSize: 14,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Icon(Icons.more_vert),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: LineChart(
-                        LineChartData(
-                          lineBarsData: [
-                            LineChartBarData(
-                              spots: updatesOverTime.entries
-                                  .toList() // Convert entries to a list
-                                  .map((entry) => FlSpot(
-                                  entry.key.millisecondsSinceEpoch
-                                      .toDouble(),
-                                  entry.value.toDouble()))
-                                  .toList(),
-                              isCurved: true,
-                              color: Colors.blue,
-                              barWidth: 4,
-                              isStrokeCapRound: true,
-                              dotData: FlDotData(show: true),
-                              belowBarData: BarAreaData(show: true),
-                            ),
-                          ],
-                          borderData: FlBorderData(
-                            show: false,
-                            border: Border.all(color: Colors.grey, width: 1),
-                          ),
-                          titlesData: FlTitlesData(
-                            leftTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                  reservedSize: 44, showTitles: true),
-                            ),
-                            rightTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                  reservedSize: 44, showTitles: false),
-                            ),
-                            topTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                  reservedSize: 44, showTitles: false),
-                            ),
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                reservedSize: 44,
-                                showTitles: true,
-                                getTitlesWidget: (value, meta) {
-                                  DateTime date =
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                      value.toInt());
-                                  return Text(
-                                    DateFormat('MM/dd').format(date),
-                                    style:
-                                    TextStyle(color: black, fontSize: 10),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          lineTouchData: LineTouchData(
-                            touchTooltipData: LineTouchTooltipData(
-                              getTooltipItems:
-                                  (List<LineBarSpot> touchedBarSpots) {
-                                return touchedBarSpots.map((lineBarSpot) {
-                                  final date =
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                      lineBarSpot.x.toInt());
-                                  final formattedDate =
-                                  DateFormat('MM/dd/yyyy').format(date);
-                                  return LineTooltipItem(
-                                    '$formattedDate\nUpdates: ${lineBarSpot.y.toInt()}',
-                                    TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
                                     ),
                                   );
-                                }).toList();
-                              },
-                            ),
-                            touchSpotThreshold: 10,
+                                },
+                                child: const Icon(Icons.more_vert),
+                              ),
+                            ],
                           ),
-                        ),
+                          const SizedBox(height: 10),
+                          Expanded(
+                            child: PieChart(
+                              PieChartData(
+                                sectionsSpace: 0,
+                                centerSpaceRadius: 20,
+                                sections: getPieChartSections(taskCountByPriority),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                SizedBox(
+                  height: 20,
+                ),
+                // Add the new bar chart for Task Assignment Events
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Container(
+                    width: double.infinity,
+                    height: 300, // Height to accommodate the bar chart
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: grey.withOpacity(0.01),
+                            spreadRadius: 10,
+                            blurRadius: 3,
+                          ),
+                        ]),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Task Assignment Events",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: black),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showBottomSheet(
+                                    "Task Assignment Events",
+                                    Padding(
+                                      padding:
+                                      const EdgeInsets.symmetric(horizontal: 20),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: List.generate(
+                                            assignmentEvents.length, (index) {
+                                          return FadeInUp(
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(bottom: 10),
+                                              child: Container(
+                                                width: double.infinity, // Full width
+                                                decoration: BoxDecoration(
+                                                  color: primary.withOpacity(.4),
+                                                  borderRadius:
+                                                  BorderRadius.circular(12),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.01),
+                                                      spreadRadius: 10,
+                                                      blurRadius: 3,
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(5),
+                                                  child: Row(
+                                                    children: [
+                                                      const SizedBox(width: 20),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            assignmentEvents.keys
+                                                                .elementAt(index),
+                                                            style: const TextStyle(
+                                                              fontWeight:
+                                                              FontWeight.bold,
+                                                              fontSize: 16,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(height: 5),
+                                                          Text(
+                                                            "${
+                                                                assignmentEvents.values
+                                                                    .elementAt(index)
+                                                                    .toString()
+                                                            } tasks",
+                                                            style: const TextStyle(
+                                                              fontWeight:
+                                                              FontWeight.w500,
+                                                              fontSize: 14,
+                                                              color: Colors.white,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: const Icon(Icons.more_vert),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Expanded(
+                            child: BarChart(
+                              BarChartData(
+                                barGroups: [
+                                  BarChartGroupData(
+                                    x: 0,
+                                    barRods: [
+                                      BarChartRodData(
+                                        toY: assignmentEvents['assignee_add']
+                                            ?.toDouble() ??
+                                            0,
+                                        color: Colors.green,
+                                        width: 20,
+                                        borderRadius: BorderRadius.zero,
+                                      ),
+                                    ],
+                                  ),
+                                  BarChartGroupData(
+                                    x: 1,
+                                    barRods: [
+                                      BarChartRodData(
+                                        toY: assignmentEvents['assignee_rem']
+                                            ?.toDouble() ??
+                                            0,
+                                        color: Colors.red,
+                                        width: 20,
+                                        borderRadius: BorderRadius.zero,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                                borderData: FlBorderData(
+                                  show: false,
+                                ),
+                                titlesData: FlTitlesData(
+                                  leftTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      reservedSize: 40,
+                                      showTitles: true,
+                                      getTitlesWidget: (value, meta) {
+                                        return Text(
+                                          value.toInt().toString(),
+                                          style: const TextStyle(
+                                              color: black, fontSize: 14),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      reservedSize: 40,
+                                      showTitles: true,
+                                      getTitlesWidget: (value, meta) {
+                                        String title = value.toInt() == 0
+                                            ? 'Add Assignee '
+                                            : ' Remove Assignee';
+                                        return Text(
+                                          title,
+                                          style: const TextStyle(
+                                              color: black, fontSize: 10),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  topTitles: const AxisTitles(
+                                    sideTitles: SideTitles(
+                                      reservedSize: 40,
+                                      showTitles: false,
+                                    ),
+                                  ),
+                                  rightTitles: const AxisTitles(
+                                    sideTitles: SideTitles(
+                                      reservedSize: 40,
+                                      showTitles: false,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+
+                // Add the new chart for Activity types
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Container(
+                    width: double.infinity,
+                    height: 300, // Height to accommodate the pie chart
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: grey.withOpacity(0.01),
+                            spreadRadius: 10,
+                            blurRadius: 3,
+                          ),
+                        ]),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Activity Types",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: black),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showBottomSheet(
+                                    "Activity Types",
+                                    Padding(
+                                      padding:
+                                      const EdgeInsets.symmetric(horizontal: 20),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: List.generate(
+                                            activityTypes.length, (index) {
+                                          return FadeInUp(
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(bottom: 10),
+                                              child: Container(
+                                                width: double.infinity, // Full width
+                                                decoration: BoxDecoration(
+                                                  color: primary.withOpacity(.4),
+                                                  borderRadius:
+                                                  BorderRadius.circular(12),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.01),
+                                                      spreadRadius: 10,
+                                                      blurRadius: 3,
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(5),
+                                                  child: Row(
+                                                    children: [
+                                                      const SizedBox(width: 20),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            activityTypes.keys
+                                                                .elementAt(index),
+                                                            style: const TextStyle(
+                                                              fontWeight:
+                                                              FontWeight.bold,
+                                                              fontSize: 16,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(height: 5),
+                                                          Text(
+                                                            "${
+                                                                activityTypes.values
+                                                                    .elementAt(index)
+                                                                    .toString()
+                                                            } tasks",
+                                                            style: const TextStyle(
+                                                              fontWeight:
+                                                              FontWeight.w500,
+                                                              fontSize: 14,
+                                                              color: Colors.white,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: const Icon(Icons.more_vert),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Expanded(
+                            child: PieChart(
+                              PieChartData(
+                                sectionsSpace: 0,
+                                centerSpaceRadius: 20,
+                                sections: getPieChartSections(activityTypes),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Container(
+                    width: double.infinity,
+                    height: 300, // Height to accommodate the bar chart
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: grey.withOpacity(0.01),
+                            spreadRadius: 10,
+                            blurRadius: 3,
+                          ),
+                        ]),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Project-Specific Task Distribution",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: black),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showBottomSheet(
+                                    "Project-Specific Task Distribution",
+                                    Padding(
+                                      padding:
+                                      const EdgeInsets.symmetric(horizontal: 20),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: List.generate(
+                                            getTaskCountByProject(tasks).length, (index) {
+                                          return FadeInUp(
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(bottom: 10),
+                                              child: Container(
+                                                width: double.infinity, // Full width
+                                                decoration: BoxDecoration(
+                                                  color: primary.withOpacity(.4),
+                                                  borderRadius:
+                                                  BorderRadius.circular(12),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.01),
+                                                      spreadRadius: 10,
+                                                      blurRadius: 3,
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(5),
+                                                  child: Row(
+                                                    children: [
+                                                      const SizedBox(width: 20),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            getTaskCountByProject(tasks).keys
+                                                                .elementAt(index),
+                                                            style: const TextStyle(
+                                                              fontWeight:
+                                                              FontWeight.bold,
+                                                              fontSize: 16,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(height: 5),
+                                                          Text(
+                                                            "${
+                                                                getTaskCountByProject(tasks).values
+                                                                    .elementAt(index)
+                                                                    .toString()
+                                                            } tasks",
+                                                            style: const TextStyle(
+                                                              fontWeight:
+                                                              FontWeight.w500,
+                                                              fontSize: 14,
+                                                              color: Colors.white,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: const Icon(Icons.more_vert),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Expanded(
+                            child: BarChart(
+                              BarChartData(
+                                barGroups:
+                                getBarChartGroups(getTaskCountByProject(tasks)),
+                                borderData: FlBorderData(
+                                  show: false,
+                                ),
+                                titlesData: FlTitlesData(
+                                  leftTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      reservedSize: 40,
+                                      showTitles: true,
+                                      getTitlesWidget: (value, meta) {
+                                        return Text(
+                                          value.toInt().toString(),
+                                          style: const TextStyle(
+                                              color: black, fontSize: 14),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      reservedSize: 40,
+                                      showTitles: true,
+                                      getTitlesWidget: (value, meta) {
+                                        final projectName =
+                                        getTaskCountByProject(tasks)
+                                            .keys
+                                            .toList()[value.toInt()];
+                                        return Text(
+                                          projectName,
+                                          style: const TextStyle(
+                                              color: black, fontSize: 10),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  topTitles: const AxisTitles(
+                                    sideTitles: SideTitles(
+                                      reservedSize: 40,
+                                      showTitles: false,
+                                    ),
+                                  ),
+                                  rightTitles: const AxisTitles(
+                                    sideTitles: SideTitles(
+                                      reservedSize: 40,
+                                      showTitles: false,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                // Add the new time series chart for Task Updates Over Time
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Container(
+                    width: double.infinity,
+                    height: 300,
+                    decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: grey.withOpacity(0.01),
+                            spreadRadius: 10,
+                            blurRadius: 3,
+                          ),
+                        ]),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Task Updates Over Time",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: black),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showBottomSheet(
+                                    "Task Updates Over Time",
+                                    Padding(
+                                      padding:
+                                      const EdgeInsets.symmetric(horizontal: 20),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: List.generate(
+                                            updatesOverTime.length, (index) {
+                                          return FadeInUp(
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(bottom: 10),
+                                              child: Container(
+                                                width: double.infinity, // Full width
+                                                decoration: BoxDecoration(
+                                                  color: primary.withOpacity(.4),
+                                                  borderRadius:
+                                                  BorderRadius.circular(12),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.01),
+                                                      spreadRadius: 10,
+                                                      blurRadius: 3,
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(5),
+                                                  child: Row(
+                                                    children: [
+                                                      const SizedBox(width: 20),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            timeago.format(updatesOverTime.keys
+                                                                .elementAt(index))
+                                                            ,
+                                                            style: const TextStyle(
+                                                              fontWeight:
+                                                              FontWeight.bold,
+                                                              fontSize: 16,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(height: 5),
+                                                          Text(
+                                                            "${
+                                                                updatesOverTime.values
+                                                                    .elementAt(index)
+                                                                    .toString()
+                                                            } tasks",
+                                                            style: const TextStyle(
+                                                              fontWeight:
+                                                              FontWeight.w500,
+                                                              fontSize: 14,
+                                                              color: Colors.white,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: const Icon(Icons.more_vert),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Expanded(
+                            child: LineChart(
+                              LineChartData(
+                                lineBarsData: [
+                                  LineChartBarData(
+                                    spots: updatesOverTime.entries
+                                        .toList() // Convert entries to a list
+                                        .map((entry) => FlSpot(
+                                        entry.key.millisecondsSinceEpoch
+                                            .toDouble(),
+                                        entry.value.toDouble()))
+                                        .toList(),
+                                    isCurved: true,
+                                    color: Colors.blue,
+                                    barWidth: 4,
+                                    isStrokeCapRound: true,
+                                    dotData: FlDotData(show: true),
+                                    belowBarData: BarAreaData(show: true),
+                                  ),
+                                ],
+                                borderData: FlBorderData(
+                                  show: false,
+                                  border: Border.all(color: Colors.grey, width: 1),
+                                ),
+                                titlesData: FlTitlesData(
+                                  leftTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                        reservedSize: 44, showTitles: true),
+                                  ),
+                                  rightTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                        reservedSize: 44, showTitles: false),
+                                  ),
+                                  topTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                        reservedSize: 44, showTitles: false),
+                                  ),
+                                  bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      reservedSize: 44,
+                                      showTitles: true,
+                                      getTitlesWidget: (value, meta) {
+                                        DateTime date =
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            value.toInt());
+                                        return Text(
+                                          DateFormat('MM/dd').format(date),
+                                          style:
+                                          TextStyle(color: black, fontSize: 10),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                lineTouchData: LineTouchData(
+                                  touchTooltipData: LineTouchTooltipData(
+                                    getTooltipItems:
+                                        (List<LineBarSpot> touchedBarSpots) {
+                                      return touchedBarSpots.map((lineBarSpot) {
+                                        final date =
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            lineBarSpot.x.toInt());
+                                        final formattedDate =
+                                        DateFormat('MM/dd/yyyy').format(date);
+                                        return LineTooltipItem(
+                                          '$formattedDate\nUpdates: ${lineBarSpot.y.toInt()}',
+                                          TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        );
+                                      }).toList();
+                                    },
+                                  ),
+                                  touchSpotThreshold: 10,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
             ),
           ),
-          const SizedBox(
-            height: 20,
-          ),
-        ],
-      ),
+        )
+
+      ],
     );
   }
 

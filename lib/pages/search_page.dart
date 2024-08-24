@@ -54,7 +54,8 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ]),
             child: Padding(
-              padding: const EdgeInsets.only(top: 30, right: 20, left: 20, bottom: 10),
+              padding: const EdgeInsets.only(
+                  top: 30, right: 20, left: 20, bottom: 10),
               child: Column(
                 children: [
                   Row(
@@ -63,7 +64,10 @@ class _SearchPageState extends State<SearchPage> {
                       BackButton(),
                       const Text(
                         "Search tasks",
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: black),
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: black),
                       ),
                       Image.asset("assets/logo.png", height: 70, width: 70),
                     ],
@@ -73,7 +77,10 @@ class _SearchPageState extends State<SearchPage> {
                   SizedBox(height: 15),
                   Text(
                     "${_filteredTasks.length} tasks found",
-                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: primary),
+                    style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: primary),
                   ),
                   SizedBox(height: 15),
                 ],
@@ -81,89 +88,96 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: _filteredTasks.length,
-              itemBuilder: (context, index) {
-                var task = _filteredTasks[index];
-                var projectName = task['current']['project'];
-                var taskName = task['current']['name'];
-                var status = task['current']['status']['status'];
-                var color = task['current']['status']['color'];
-                var taskId = task['_id']['\$oid'];
-                var newColorCode = Color(int.parse(color.replaceFirst('#', '0xFF')));
+            child: _filteredTasks.isEmpty
+                ? Image.asset(
+                    "assets/images/noData.png",
+                    fit: BoxFit.cover,
+                  )
+                : ListView.builder(
+                    itemCount: _filteredTasks.length,
+                    itemBuilder: (context, index) {
+                      var task = _filteredTasks[index];
+                      var projectName = task['current']['project'];
+                      var taskName = task['current']['name'];
+                      var status = task['current']['status']['status'];
+                      var color = task['current']['status']['color'];
+                      var taskId = task['_id']['\$oid'];
+                      var newColorCode =
+                          Color(int.parse(color.replaceFirst('#', '0xFF')));
 
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TaskDetailsPage(
-                          projectName: projectName,
-                          taskName: taskName,
-                          tasktId: taskId,
-                        ),
-                      ),
-                    );
-                  },
-                  child: TimelineTile(
-                    alignment: TimelineAlign.manual,
-                    lineXY: 0.1,
-                    isFirst: index == 0,
-                    isLast: index == _filteredTasks.length - 1,
-                    indicatorStyle: const IndicatorStyle(
-                      width: 20,
-                      color: primary,
-                      padding: EdgeInsets.all(8),
-                    ),
-                    beforeLineStyle: LineStyle(
-                      color: grey.withOpacity(0.5),
-                      thickness: 2,
-                    ),
-                    endChild: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            projectName,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: black,
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            taskName,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: black.withOpacity(0.7),
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 5),
-                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: newColorCode ,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Text(
-                              status,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: white,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TaskDetailsPage(
+                                projectName: projectName,
+                                taskName: taskName,
+                                tasktId: taskId,
                               ),
                             ),
-                          )
-                        ],
-                      ),
-                    ),
+                          );
+                        },
+                        child: TimelineTile(
+                          alignment: TimelineAlign.manual,
+                          lineXY: 0.1,
+                          isFirst: index == 0,
+                          isLast: index == _filteredTasks.length - 1,
+                          indicatorStyle: const IndicatorStyle(
+                            width: 20,
+                            color: primary,
+                            padding: EdgeInsets.all(8),
+                          ),
+                          beforeLineStyle: LineStyle(
+                            color: grey.withOpacity(0.5),
+                            thickness: 2,
+                          ),
+                          endChild: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  projectName,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: black,
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  taskName,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: black.withOpacity(0.7),
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  decoration: BoxDecoration(
+                                    color: newColorCode,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Text(
+                                    status,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: white,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
         ],
       ),
@@ -176,7 +190,6 @@ class _SearchPageState extends State<SearchPage> {
       child: TextField(
         onChanged: _filterTasks,
         style: GoogleFonts.inter(
-
           color: const Color(0xFF151624),
         ),
         maxLines: 1,
@@ -209,6 +222,4 @@ class _SearchPageState extends State<SearchPage> {
       ),
     );
   }
-
 }
-
