@@ -16,7 +16,7 @@ class StatsPage extends StatefulWidget {
 }
 
 class _StatsPageState extends State<StatsPage> {
-  int activeDay = 3;
+  int activeProject = -1;
   List<dynamic> tasks = [];
   bool loading = false;
   List<String> projectNames = [];
@@ -27,6 +27,15 @@ class _StatsPageState extends State<StatsPage> {
     setState(() {
       userEmail = user?.email;
     });
+  }
+
+  List<dynamic> _getFilteredTasks() {
+    if (activeProject == -1) {
+      return tasks;
+    } else {
+      String selectedProject = projectNames[activeProject];
+      return tasks.where((task) => task['current']['project'] == selectedProject).toList();
+    }
   }
 
   Future<void> _loadTaskActivities() async {
@@ -228,12 +237,14 @@ class _StatsPageState extends State<StatsPage> {
   Widget getBody() {
     var size = MediaQuery.of(context).size;
 
-    final taskCountByStatus = getTaskCountByStatus(tasks);
-    final updatesOverTime = getUpdatesOverTime(tasks);
-    final taskCountByPriority = getTaskCountByPriority(tasks);
-    final assignmentEvents = getAssignmentEvents(tasks);
-    final activityTypes = getActivityTypes(tasks);
-    final taskCountByProject = getTaskCountByProject(tasks);
+    List<dynamic> filteredTasks = _getFilteredTasks();
+
+    final taskCountByStatus = getTaskCountByStatus(filteredTasks);
+    final updatesOverTime = getUpdatesOverTime(filteredTasks);
+    final taskCountByPriority = getTaskCountByPriority(filteredTasks);
+    final assignmentEvents = getAssignmentEvents(filteredTasks);
+    final activityTypes = getActivityTypes(filteredTasks);
+    final taskCountByProject = getTaskCountByProject(filteredTasks);
 
     // Calculate total counts
     final totalTasks = tasks.length;
@@ -269,7 +280,7 @@ class _StatsPageState extends State<StatsPage> {
                           fontWeight: FontWeight.bold,
                           color: black),
                     ),
-                    Icon(Icons.filter_alt)
+                    Icon(Icons.filter_alt, color: Colors.white,)
                   ],
                 ),
                 const SizedBox(
@@ -320,6 +331,40 @@ class _StatsPageState extends State<StatsPage> {
                           fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                   ],
+                ),
+                SizedBox(height: 25),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(projectNames.length + 1, (index) {
+                      String displayName = index == 0 ? 'All' : projectNames[index - 1];
+                      bool isActive = index == 0 ? activeProject == -1 : activeProject == index - 1;
+
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            activeProject = index == 0 ? -1 : index - 1;
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 5),
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: isActive ? primary : grey.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            displayName,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: isActive ? white : black,
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
                 ),
               ],
             ),

@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
         //   );
         // } else {
           // Proceed to the app (replace '/home' with your home page route)
-          Navigator.push(context, MaterialPageRoute(builder: (context) => RootApp() ));
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => RootApp() ),(Route<dynamic> route) => false );
         //}
       } on FirebaseAuthException catch (e) {
 

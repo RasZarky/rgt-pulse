@@ -179,7 +179,7 @@ class _HomePageState extends State<HomePage> {
         ),
         Expanded(
           child: filteredTasks.isEmpty ? 
-          Image.asset("assets/images/noData.png", fit: BoxFit.cover,)    
+          Image.asset("assets/images/noData.png", fit: BoxFit.cover,)
           : ListView.builder(
             itemCount: filteredTasks.length,
             itemBuilder: (context, index) {
