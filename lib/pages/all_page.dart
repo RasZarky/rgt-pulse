@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
+import 'package:rgt_pulse/pages/all_stats_page.dart';
+import 'package:rgt_pulse/pages/leaderboard_page.dart';
 import 'package:rgt_pulse/pages/search_page.dart';
 import 'package:rgt_pulse/pages/task_detail_page.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -75,12 +77,12 @@ class _AllPageState extends State<AllPage> {
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             children: [
-              _buildGridMenuItem(Icons.info, 'Project Info', () {
-                Navigator.pop(context);
+              _buildGridMenuItem(Icons.multiline_chart, 'Stats', () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AllStatsPage() ));
                 // Handle Project Info action
               }),
-              _buildGridMenuItem(Icons.filter_list, 'Filter Tasks', () {
-                Navigator.pop(context);
+              _buildGridMenuItem(Icons.supervised_user_circle_outlined, 'Collaborators', () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LeaderboardPage() ));
                 // Handle Filter Tasks action
               }),
               _buildGridMenuItem(Icons.settings, 'Settings', () {
