@@ -1,11 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:rgt_pulse/pages/all_page.dart';
 import 'package:rgt_pulse/pages/leaderboard_page.dart';
 import 'package:rgt_pulse/pages/profile_page.dart';
 import 'package:rgt_pulse/pages/stats_page.dart';
-
 import '../theme/colors.dart';
 import 'home_page.dart';
 

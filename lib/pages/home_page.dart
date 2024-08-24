@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
+import 'package:rgt_pulse/pages/search_page.dart';
 import 'package:rgt_pulse/pages/task_detail_page.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import '../theme/colors.dart';
@@ -130,7 +131,11 @@ class _HomePageState extends State<HomePage> {
                       "MY Projects",
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: black),
                     ),
-                    Icon(Icons.search)
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(tasks: filteredTasks) ));
+                      },
+                        child: Icon(Icons.search))
                   ],
                 ),
                 SizedBox(height: 25),
