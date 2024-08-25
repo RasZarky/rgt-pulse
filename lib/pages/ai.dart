@@ -6,8 +6,10 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
+import 'package:rgt_pulse/pages/stats_page.dart';
 
 import '../theme/colors.dart';
+import 'all_stats_page.dart';
 
 const String _apiKey = "AIzaSyAjRkq-fm_vK8tRcGNO0d7sZ9nL6Vkf_k8";
 
@@ -109,11 +111,24 @@ class _ChatScreenState extends State<ChatScreen> {
                                 ),
                                 const Text(
                                   "AI might have high latency sometimes. This is due to the fact that it is still under development and not fully optimised\n"
-                                  "App is using testing keys which comes with limited quota, contact abubakari@reallygreattech for support when quota is reached",
+                                  "App is using testing keys which comes with limited quota, contact abubakari@reallygreattech for support when quota is reached\n"
+                                      "AI can make mistakes so please cross check data on various stats pages before data is used",
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                       color: black),
+                                ),
+                                TextButton(onPressed: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => StatsPage() ) );
+
+                                },
+                                    child: Text("My projects stats 📈")
+                                ),
+                                TextButton(onPressed: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => AllStatsPage() ) );
+
+                                },
+                                    child: Text("All RGT projects stats 📊")
                                 ),
                                 const SizedBox(
                                   height: 25,

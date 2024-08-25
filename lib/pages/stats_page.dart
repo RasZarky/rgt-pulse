@@ -221,7 +221,7 @@ class _StatsPageState extends State<StatsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: grey.withOpacity(0.05),
+      backgroundColor: Colors.white.withOpacity(0.7),
       body: OverlayLoaderWithAppIcon(
         isLoading: loading,
         overlayOpacity: 0.7,
