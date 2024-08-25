@@ -4,9 +4,16 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:link_text/link_text.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
+import 'package:pdf/pdf.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import '../theme/colors.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
+import 'package:printing/printing.dart';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:timeago/timeago.dart' as timeago;
 
 class TaskDetailsPage extends StatefulWidget {
@@ -34,6 +41,42 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   void initState() {
     super.initState();
     _loadActivities();
+  }
+
+  pw.Widget _buildActivityDetails(Map<String, dynamic> update) {
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: update.entries.map((entry) {
+        return pw.Text('${entry.key}: ${entry.value}');
+      }).toList(),
+    );
+  }
+
+  pw.Widget _buildTitle() {
+    return pw.Text(
+      'Task Report',
+      style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+    );
+  }
+
+  pw.Widget _buildActivitiesList() {
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: activities.map((activity) {
+        return pw.Container(
+          margin: const pw.EdgeInsets.symmetric(vertical: 5),
+          child: pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text('Event: ${activity['event'] ?? "N/A"}', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+              pw.Text('Updated by: ${activity['update_by'] ?? "N/A"}'),
+              pw.Text('Date: ${_formatDate(activity['date']['\$date'])}'),
+              _buildActivityDetails(activity['update']),
+            ],
+          ),
+        );
+      }).toList(),
+    );
   }
 
   String _formatDate(var dateStr) {
@@ -154,6 +197,89 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
       lastUpdated = "not available";
     }
 
+    pw.Widget _buildTaskDetails() {
+      return pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text('Project Name: ${widget.projectName}', style: pw.TextStyle(fontSize: 16)),
+          pw.Text('Task Name: ${widget.taskName}', style: pw.TextStyle(fontSize: 16)),
+          pw.Text('Priority: ${matchedTask?['current']['priority'] ?? "N/A"}', style: pw.TextStyle(fontSize: 16)),
+          pw.Text('Status: ${matchedTask?['current']['status']['status'] ?? "N/A"}', style: pw.TextStyle(fontSize: 16)),
+          pw.Text('Last Updated: $lastUpdated', style: pw.TextStyle(fontSize: 16)),
+          pw.Text('Report generated on: ${DateTime.now()}', style: pw.TextStyle(fontSize: 16)),
+          // Add more details as needed
+        ],
+      );
+    }
+
+    Future<Uint8List> _generatePDF() async {
+      final pdf = pw.Document();
+      final pageTheme = pw.PageTheme(
+        margin: const pw.EdgeInsets.all(20),
+        theme: pw.ThemeData.withFont(
+
+        ),
+      );
+
+      pdf.addPage(
+        pw.MultiPage(
+          pageTheme: pageTheme,
+          build: (pw.Context context) {
+            return [
+              _buildTitle(),
+              pw.SizedBox(height: 20),
+              _buildTaskDetails(),
+              pw.SizedBox(height: 20),
+              // Collaborators
+              pw.Text('Collaborators', style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
+              pw.Divider(),
+              pw.SizedBox(height: 8),
+              ...collaborators.map((collaborator) {
+                String colorHex = collaborator['color']?.replaceFirst('#', '') ?? '43aa8b';
+                return pw.Container(
+                  margin: const pw.EdgeInsets.symmetric(vertical: 4),
+                  padding: const pw.EdgeInsets.all(8),
+                  decoration: pw.BoxDecoration(
+                    color: PdfColor.fromHex(colorHex.length == 6 ? 'FF$colorHex' : 'FF43aa8b'),
+                    borderRadius: pw.BorderRadius.circular(4),
+                  ),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text(collaborator['username'], style: pw.TextStyle(color: PdfColors.white, fontWeight: pw.FontWeight.bold)),
+                      pw.Text(collaborator['email'], style: pw.TextStyle(color: PdfColors.white)),
+                    ],
+                  ),
+                );
+              }).toList(),
+              pw.SizedBox(height: 16),
+              pw.Text('Activities', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+              pw.Divider(),
+              pw.SizedBox(height: 10),
+              _buildActivitiesList(),
+            ];
+          },
+        ),
+      );
+
+      return pdf.save();
+    }
+
+    Future<void> _printPDFReport() async {
+      try {
+        final pdfBytes = await _generatePDF();
+        await Printing.layoutPdf(
+          onLayout: (PdfPageFormat format) async => pdfBytes,
+        );
+      } catch (e) {
+        print('Failed to print PDF report: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to print PDF report: $e')),
+        );
+      }
+    }
+
+
     return Scaffold(
       body: OverlayLoaderWithAppIcon(
         isLoading: loading,
@@ -190,6 +316,10 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                               color: black),
                         ),
                         IconButton(
+                          icon: Icon(Icons.print),
+                          onPressed: _printPDFReport,
+                        ),
+                        IconButton(
                           icon: Icon(Icons.more_vert),
                           onPressed: _showMoreInfoDialog,
                         )
@@ -203,15 +333,27 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                           color: black),
                     ),
                     const SizedBox(height: 10),
-                    LinkText(
-                      "Task link ${matchedTask?["current"]["web_url"]}",
-                      textAlign: TextAlign.center,
-                      onLinkTap: (url) {
-                        if (matchedTask?["current"]["web_url"] != null) {
-                          launchUrl(
-                              Uri.parse(matchedTask?["current"]["web_url"]));
-                        }
-                      },
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        LinkText(
+                          "Task link ${matchedTask?["current"]["web_url"]}",
+                          textAlign: TextAlign.center,
+                          onLinkTap: (url) {
+                            if (matchedTask?["current"]["web_url"] != null) {
+                              launchUrl(
+                                  Uri.parse(matchedTask?["current"]["web_url"]));
+                            }
+                          },
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            Share.share('${widget.projectName}\n'
+                                '${widget.taskName}\n'
+                                'Task link ${matchedTask?["current"]["web_url"]}', subject: 'Share task');
+                          },
+                            child: Icon(Icons.share))
+                      ],
                     ),
                     const SizedBox(height: 10),
                     Text(
@@ -360,7 +502,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                                   style: const TextStyle(color: Colors.grey),
                                 ),
                                 SizedBox(height: 5),
-                                _buildActivityDetails(activity['update']),
+                                _buildActivityDetail(activity['update']),
                               ],
                             ),
                           ),
@@ -374,7 +516,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
     );
   }
 
-  Widget _buildActivityDetails(Map<String, dynamic> update) {
+  Widget _buildActivityDetail(Map<String, dynamic> update) {
     List<Widget> details = [];
 
     update.forEach((key, value) {
