@@ -9,6 +9,7 @@ import 'package:rgt_pulse/pages/search_page.dart';
 import 'package:rgt_pulse/pages/task_detail_page.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import '../theme/colors.dart';
+import 'ai.dart';
 
 class AllPage extends StatefulWidget {
   @override
@@ -86,22 +87,22 @@ class _AllPageState extends State<AllPage> {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => CollaboratorsPage() ));
                 // Handle Filter Tasks action
               }),
-              _buildGridMenuItem(Icons.settings, 'Settings', () {
-                Navigator.pop(context);
+              _buildGridMenuItem(Icons.android, 'AI', () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(title: 'Chat with Ai',) ) );
                 // Handle Settings action
               }),
-              _buildGridMenuItem(Icons.notifications, 'Notifications', () {
-                Navigator.pop(context);
-                // Handle Notifications action
-              }),
-              _buildGridMenuItem(Icons.share, 'Share', () {
-                Navigator.pop(context);
-                // Handle Share action
-              }),
-              _buildGridMenuItem(Icons.exit_to_app, 'Logout', () {
-                Navigator.pop(context);
-                // Handle Logout action
-              }),
+              // _buildGridMenuItem(Icons.notifications, 'Notifications', () {
+              //   Navigator.pop(context);
+              //   // Handle Notifications action
+              // }),
+              // _buildGridMenuItem(Icons.share, 'Share', () {
+              //   Navigator.pop(context);
+              //   // Handle Share action
+              // }),
+              // _buildGridMenuItem(Icons.exit_to_app, 'Logout', () {
+              //   Navigator.pop(context);
+              //   // Handle Logout action
+              // }),
             ],
           ),
         );

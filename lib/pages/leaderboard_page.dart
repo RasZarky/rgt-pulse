@@ -177,7 +177,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                     padding: const EdgeInsets.only(bottom: 20),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: containerColor, // Use retrieved color
+                        color: Theme.of(context).colorScheme.surfaceContainerHighest, // Use retrieved color
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
@@ -201,9 +201,15 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                             ),
                             const SizedBox(width: 10),
                             CircleAvatar(
-                              backgroundImage: leaderboardData[index]['profilePicture'] != null
-                                  ? NetworkImage(leaderboardData[index]['profilePicture'])
-                                  : const AssetImage("assets/images/profile.jpg"),
+                              backgroundColor: containerColor,
+                              radius: 25,
+                              child: CircleAvatar(
+                                radius: 20,
+                                backgroundColor: containerColor,
+                                backgroundImage: leaderboardData[index]['profilePicture'] != null
+                                    ? NetworkImage(leaderboardData[index]['profilePicture'])
+                                    : const AssetImage("assets/images/profile.jpg"),
+                              ),
                             ),
                             const SizedBox(width: 20),
                             Column(
@@ -223,7 +229,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 14,
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                 ),
                               ],

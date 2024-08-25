@@ -176,7 +176,7 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
                           padding: const EdgeInsets.only(bottom: 10),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: containerColor, // Use retrieved color
+                              color: Theme.of(context).colorScheme.surfaceContainerHighest, // Use retrieved color
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
@@ -192,9 +192,15 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
                                 children: [
                                   const SizedBox(width: 10),
                                   CircleAvatar(
-                                    backgroundImage: leaderboardData[index]['profilePicture'] != null
-                                        ? NetworkImage(leaderboardData[index]['profilePicture'])
-                                        : const AssetImage("assets/images/profile.jpg"),
+                                    radius: 25,
+                                    backgroundColor: containerColor,
+                                    child: CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: containerColor,
+                                      backgroundImage: leaderboardData[index]['profilePicture'] != null
+                                          ? NetworkImage(leaderboardData[index]['profilePicture'])
+                                          : const AssetImage("assets/images/profile.jpg"),
+                                    ),
                                   ),
                                   const SizedBox(width: 20),
                                   Column(
@@ -226,7 +232,7 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
                                         style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           fontSize: 14,
-                                          color: Colors.white,
+                                          color: Colors.black,
                                         ),
                                       ),
                                       SizedBox(height: 5),
@@ -235,7 +241,7 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
                                         style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           fontSize: 14,
-                                          color: Colors.white,
+                                          color: Colors.black,
                                         ),
                                       )
                                     ],

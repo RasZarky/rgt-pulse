@@ -1,3 +1,4 @@
+import 'package:floating_chat_button/floating_chat_button.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:rgt_pulse/pages/all_page.dart';
@@ -5,6 +6,7 @@ import 'package:rgt_pulse/pages/leaderboard_page.dart';
 import 'package:rgt_pulse/pages/profile_page.dart';
 import 'package:rgt_pulse/pages/stats_page.dart';
 import '../theme/colors.dart';
+import 'ai.dart';
 import 'home_page.dart';
 
 class RootApp extends StatefulWidget {
@@ -36,7 +38,25 @@ class _RootAppState extends State<RootApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: getBody(),
+        body: FloatingChatButton(
+            background: getBody(),
+          onTap: (BuildContext ) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(title: 'Chat with Ai',) ) );
+          },
+            messageBackgroundColor: primary,
+            chatIconBorderColor: primary,
+            chatIconBackgroundColor: Colors.white,
+            chatIconWidget: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Image.asset("assets/images/ai.jpeg", height: 40, width: 40,),
+            ),
+            messageText: "Interact with the AI!",
+            showMessageParameters: ShowMessageParameters(
+                durationToShowMessage: const Duration(seconds: 5),
+                delayDuration: const Duration(seconds: 2),
+                showMessageFrequency: 5
+                )
+        ),
         bottomNavigationBar: getFooter(),
         floatingActionButton: FloatingActionButton(
             onPressed: () {

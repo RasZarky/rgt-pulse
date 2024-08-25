@@ -10,10 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import '../theme/colors.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:timeago/timeago.dart' as timeago;
 
 class TaskDetailsPage extends StatefulWidget {
@@ -267,10 +264,16 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
 
     Future<void> _printPDFReport() async {
       try {
+        setState(() {
+          loading = true;
+        });
         final pdfBytes = await _generatePDF();
         await Printing.layoutPdf(
           onLayout: (PdfPageFormat format) async => pdfBytes,
         );
+        setState(() {
+          loading = false;
+        });
       } catch (e) {
         print('Failed to print PDF report: $e');
         ScaffoldMessenger.of(context).showSnackBar(
