@@ -143,7 +143,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 const Text(
                                   "I can identify and extract specific information "
                                   ", such as: User email addresses "
-                                  "(e.g.,ofir@reallygreattech.com), TaskIDs (e.g., 86c01982a), "
+                                  "(e.g.,adom@reallygreattech.com), TaskIDs (e.g., 86c01982a), "
                                   "Task names (e.g., 'Medications filtermodification '), Project names "
                                   "(e.g., Mediboard), Task statutes (e.g., 'pr in review, 'qa on dev '), "
                                   "Task priorities (e.g., 'high 'Unknownpriority '), Collaborators involved in a "
@@ -301,7 +301,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
       final response = await _chat.sendMessage(
         Content.text(
-            "Based on the following task data context: $context, answer this: $message"),
+            "Based on the following data context retrieved from app data: $context, answer this: $message"),
       );
 
       final text = response.text;

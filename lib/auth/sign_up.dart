@@ -39,11 +39,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
     jsonData.forEach((task) {
       var current = task['current'];
       var activities = task['activities'];
+      var collaborators = current['collaborators'];
 
       activities.forEach((activity) {
         users.add(activity['update_by']);
       });
+
+      for (var collaborator in collaborators) {
+        users.add(collaborator['email']);
+      }
+
     });
+
+    print("${users.length}-------------------------------------------------users");
 
     setState(() {
       loading = false;
