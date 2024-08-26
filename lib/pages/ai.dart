@@ -222,6 +222,8 @@ class _ChatWidgetState extends State<ChatWidget> {
   bool _loading = false;
   bool _isLoading = true;
   String? userEmail;
+  String name = "not available";
+  String id = "not available";
 
   void _getUserEmail() {
     User? user = FirebaseAuth.instance.currentUser;
@@ -257,6 +259,22 @@ class _ChatWidgetState extends State<ChatWidget> {
       String jsonString =
           await rootBundle.loadString('assets/jesse.task_activities.json');
       _taskData = json.decode(jsonString);
+
+      for (var task in _taskData) {
+        var current = task['current'];
+
+        // Iterate through collaborators to find a match
+        for (var collaborator in current['collaborators']) {
+          if (collaborator['email'] == userEmail) {
+            setState(() {
+              name = collaborator['username'];
+              id = collaborator['id'].toString();
+            });
+            break;
+          }
+        }
+
+      }
 
       setState(() {
         _isLoading = false;
@@ -333,7 +351,7 @@ class _ChatWidgetState extends State<ChatWidget> {
               : 'No recent activity';
 
       context.write(
-          "Logged in user email is $userEmail other user details can be retrieved by searching collaborators. If the user with that email is not found then the user has not collaborated on a task ");
+          "Logged in user email is $userEmail ,name is $name and id is $id. If the user with that email is not found then the user has not collaborated on a task ");
       context.write(
           "Task $taskId ('$taskName') in project $projectName is currently $status with a priority of $priority. ");
       context.write("Collaborators involved: $collaborators. ");
@@ -370,7 +388,7 @@ class _ChatWidgetState extends State<ChatWidget> {
         return AlertDialog(
           title: const Text('Something went wrong'),
           content: SingleChildScrollView(
-            child: SelectableText(message),
+            child: SelectableText("$message\n Please try again later."),
           ),
           actions: [
             TextButton(
@@ -474,6 +492,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                     onPressed: !_loading
                         ? () async {
                             _sendChatMessage(_textController.text);
+                            _textController.clear();
                           }
                         : null,
                     icon: Icon(
