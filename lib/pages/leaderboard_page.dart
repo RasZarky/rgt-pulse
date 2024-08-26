@@ -176,7 +176,12 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
             ),
           ),
           SizedBox(height: 10),
-          Padding(
+          filteredData.isEmpty ?
+          Image.asset(
+            "assets/images/noData.png",
+            fit: BoxFit.cover,
+          )
+          : Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
