@@ -13,6 +13,8 @@ class CollaboratorsPage extends StatefulWidget {
 class _CollaboratorsPageState extends State<CollaboratorsPage> {
   bool loading = true;
   List<Map<String, dynamic>> leaderboardData = [];
+  List<String> projectNames = [];
+  int activeProject = -1;
 
   @override
   void initState() {
@@ -31,9 +33,13 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
 
     // Dictionary to store user data and tasks
     Map<int, Map<String, dynamic>> userMap = {};
+    Set<String> projectSet = {}; // To store unique project names
 
     for (var task in jsonData) {
       var current = task['current'];
+      var projectName = current['project']; // Extract project name
+      projectSet.add(projectName); // Add to set to ensure uniqueness
+
       var collaborators = current['collaborators'];
 
       for (var collaborator in collaborators) {
@@ -42,9 +48,6 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
         String? userPic = collaborator['profilePicture'];
         String userEmail = collaborator['email'];
         String? userColor = collaborator['color']; // Retrieve user color
-
-        // Debugging: Print the retrieved color
-        print("User: $userName, Color: $userColor");
 
         if (!userMap.containsKey(userId)) {
           userMap[userId] = {
@@ -59,6 +62,9 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
         userMap[userId]?['tasks'].add(current);
       }
     }
+
+    // Convert project set to a list
+    projectNames = projectSet.toList();
 
     // Calculate geek scores
     List<Map<String, dynamic>> userList = [];
@@ -85,6 +91,7 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
         'email': userData['email'],
         'geekScore': geekScore,
         'taskCount': totalTasks,
+        'tasks': userData['tasks'], // Store tasks for filtering
       });
     });
 
@@ -97,22 +104,35 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
     });
   }
 
+  List<Map<String, dynamic>> _getFilteredCollaborators() {
+    if (activeProject == -1) {
+      return leaderboardData;
+    } else {
+      String selectedProject = projectNames[activeProject];
+      return leaderboardData.where((collaborator) {
+        return collaborator['tasks'].any((task) => task['project'] == selectedProject);
+      }).toList();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white.withOpacity(0.7),
       body: OverlayLoaderWithAppIcon(
-          isLoading: loading,
-          overlayOpacity: 0.7,
-          appIconSize: 50,
-          circularProgressColor: Colors.purple,
-          overlayBackgroundColor: Colors.black,
-          appIcon: Image.asset("assets/logo.png"),
-          child: getBody()),
+        isLoading: loading,
+        overlayOpacity: 0.7,
+        appIconSize: 50,
+        circularProgressColor: Colors.purple,
+        overlayBackgroundColor: Colors.black,
+        appIcon: Image.asset("assets/logo.png"),
+        child: getBody(),
+      ),
     );
   }
 
   Widget getBody() {
+    var filteredCollaborators = _getFilteredCollaborators();
     return Column(
       children: [
         Container(
@@ -143,8 +163,42 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
                   ],
                 ),
                 Text(
-                  '${leaderboardData.length} collaborators',
+                  '${filteredCollaborators.length} collaborators',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 25),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(projectNames.length + 1, (index) {
+                      String displayName = index == 0 ? 'All' : projectNames[index - 1];
+                      bool isActive = index == 0 ? activeProject == -1 : activeProject == index - 1;
+
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            activeProject = index == 0 ? -1 : index - 1;
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 5),
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: isActive ? primary : grey.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            displayName,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: isActive ? white : black,
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
                 ),
                 const SizedBox(
                   height: 0,
@@ -154,9 +208,8 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
           ),
         ),
         Expanded(
-          child: leaderboardData.isEmpty ?
-          Image.asset("assets/images/noData.png", fit: BoxFit.cover,)
-
+          child: filteredCollaborators.isEmpty
+              ? Image.asset("assets/images/noData.png", fit: BoxFit.cover,)
               : SingleChildScrollView(
             child: Column(
               children: [
@@ -165,8 +218,8 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: List.generate(leaderboardData.length, (index) {
-                      String? colorHex = leaderboardData[index]['color'];
+                    children: List.generate(filteredCollaborators.length, (index) {
+                      String? colorHex = filteredCollaborators[index]['color'];
                       Color containerColor = colorHex != null
                           ? Color(int.parse(colorHex.replaceAll('#', '0xff')))
                           : green; // Fallback color if null
@@ -197,8 +250,8 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
                                     child: CircleAvatar(
                                       radius: 20,
                                       backgroundColor: containerColor,
-                                      backgroundImage: leaderboardData[index]['profilePicture'] != null
-                                          ? NetworkImage(leaderboardData[index]['profilePicture'])
+                                      backgroundImage: filteredCollaborators[index]['profilePicture'] != null
+                                          ? NetworkImage(filteredCollaborators[index]['profilePicture'])
                                           : const AssetImage("assets/images/profile.jpg"),
                                     ),
                                   ),
@@ -207,7 +260,7 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        leaderboardData[index]['username'],
+                                        filteredCollaborators[index]['username'],
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
@@ -216,34 +269,60 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
                                       ),
                                       SizedBox(height: 5),
                                       Text(
-                                        leaderboardData[index]['email'],
+                                        filteredCollaborators[index]['email'],
                                         overflow: TextOverflow.ellipsis,
                                         softWrap: true,
                                         style: const TextStyle(
                                           overflow: TextOverflow.ellipsis,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 14,
-                                          color: Colors.black,
+                                          color: Colors.black54,
                                         ),
                                       ),
                                       SizedBox(height: 5),
-                                      Text(
-                                        'Geek Score: ${leaderboardData[index]['geekScore'].toStringAsFixed(2)}%',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                        ),
+                                      Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                filteredCollaborators[index]['taskCount'].toString(),
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                    color: Colors.black),
+                                              ),
+                                              const SizedBox(width: 5),
+                                              const Text(
+                                                "Tasks",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 12,
+                                                    color: Colors.black),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "${filteredCollaborators[index]['geekScore'].toStringAsFixed(2)}%",
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18,
+                                                    color: Colors.green),
+                                              ),
+                                              const SizedBox(width: 5),
+                                              const Text(
+                                                "Geek",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 12,
+                                                    color: Colors.green),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        'Tasks Count: ${leaderboardData[index]['taskCount']}',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                        ),
-                                      )
                                     ],
                                   ),
                                 ],
@@ -258,8 +337,7 @@ class _CollaboratorsPageState extends State<CollaboratorsPage> {
               ],
             ),
           ),
-        )
-
+        ),
       ],
     );
   }

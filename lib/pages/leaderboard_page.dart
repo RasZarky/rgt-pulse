@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_loader_with_app_icon/overlay_loader_with_app_icon.dart';
 import 'package:rgt_pulse/theme/colors.dart';
 
@@ -13,6 +14,8 @@ class LeaderboardPage extends StatefulWidget {
 class _LeaderboardPageState extends State<LeaderboardPage> {
   bool loading = true;
   List<Map<String, dynamic>> leaderboardData = [];
+  List<Map<String, dynamic>> filteredData = []; // Added to store filtered data
+  TextEditingController searchController = TextEditingController(); // Added to control search input
 
   @override
   void initState() {
@@ -41,9 +44,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
         String userName = collaborator['username'];
         String? userPic = collaborator['profilePicture'];
         String? userColor = collaborator['color']; // Retrieve user color
-
-        // Debugging: Print the retrieved color
-        print("User: $userName, Color: $userColor");
 
         if (!userMap.containsKey(userId)) {
           userMap[userId] = {
@@ -89,7 +89,21 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
 
     setState(() {
       leaderboardData = userList;
+      filteredData = userList; // Initialize filteredData with full list
       loading = false;
+    });
+  }
+
+  void _filterTasks(String query) {
+    setState(() {
+      filteredData = leaderboardData.where((user) {
+        String username = user['username'].toLowerCase();
+        String id = user['id'].toString();
+        String geekScore = user['geekScore'].toStringAsFixed(2);
+        return username.contains(query.toLowerCase()) ||
+            id.contains(query) ||
+            geekScore.contains(query);
+      }).toList();
     });
   }
 
@@ -98,13 +112,14 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
     return Scaffold(
       backgroundColor: Colors.grey.withOpacity(0.05),
       body: OverlayLoaderWithAppIcon(
-          isLoading: loading,
-          overlayOpacity: 0.7,
-          appIconSize: 50,
-          circularProgressColor: Colors.purple,
-          overlayBackgroundColor: Colors.black,
-          appIcon: Image.asset("assets/logo.png"),
-          child: getBody()),
+        isLoading: loading,
+        overlayOpacity: 0.7,
+        appIconSize: 50,
+        circularProgressColor: Colors.purple,
+        overlayBackgroundColor: Colors.black,
+        appIcon: Image.asset("assets/logo.png"),
+        child: getBody(),
+      ),
     );
   }
 
@@ -140,9 +155,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                       Icon(Icons.wine_bar)
                     ],
                   ),
-                  const SizedBox(
-                    height: 0,
-                  ),
+                  const SizedBox(height: 10),
                   const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -150,13 +163,14 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                         '⚠️ Only users who are collaborators on tasks appear on leaderboard.',
                         style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                       ),
-
                       Text(
                         '⚠️ Collaborate and gain more stats to appear on leaderboard',
                         style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
+                  const SizedBox(height: 10),
+                  searchTextField(MediaQuery.of(context).size), // Added search field
                 ],
               ),
             ),
@@ -166,8 +180,8 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: List.generate(leaderboardData.length, (index) {
-                String? colorHex = leaderboardData[index]['color'];
+              children: List.generate(filteredData.length, (index) {
+                String? colorHex = filteredData[index]['color'];
                 Color containerColor = colorHex != null
                     ? Color(int.parse(colorHex.replaceAll('#', '0xff')))
                     : green; // Fallback color if null
@@ -206,8 +220,8 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                               child: CircleAvatar(
                                 radius: 20,
                                 backgroundColor: containerColor,
-                                backgroundImage: leaderboardData[index]['profilePicture'] != null
-                                    ? NetworkImage(leaderboardData[index]['profilePicture'])
+                                backgroundImage: filteredData[index]['profilePicture'] != null
+                                    ? NetworkImage(filteredData[index]['profilePicture'])
                                     : const AssetImage("assets/images/profile.jpg"),
                               ),
                             ),
@@ -216,7 +230,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  leaderboardData[index]['username'],
+                                  filteredData[index]['username'],
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -224,13 +238,30 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                                   ),
                                 ),
                                 SizedBox(height: 5),
-                                Text(
-                                  'Geek Score: ${leaderboardData[index]['geekScore'].toStringAsFixed(2)}%',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                  ),
+                                Column(
+                                  children: [
+
+                                    const SizedBox(height: 5),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "${filteredData[index]['geekScore'].toStringAsFixed(2)}%",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                              color: Colors.green),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        const Text(
+                                          "Geek",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 12,
+                                              color: Colors.green),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -244,6 +275,48 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget searchTextField(Size size) {
+    return SizedBox(
+      height: size.height / 13,
+      child: TextField(
+        controller: searchController, // Added controller
+        onChanged: _filterTasks,
+        style: GoogleFonts.inter(
+          color: const Color(0xFF151624),
+        ),
+        maxLines: 1,
+        keyboardType: TextInputType.text,
+        cursorColor: const Color(0xFF151624),
+        decoration: InputDecoration(
+          hintText: 'Search user name, Geek score, Id',
+          hintStyle: GoogleFonts.inter(
+            fontSize: 16.0,
+            color: const Color(0xFF151624).withOpacity(0.5),
+          ),
+          filled: true,
+          fillColor: const Color(0xFFF2F3F5),
+          prefixIcon: Icon(
+            Icons.search,
+            color: const Color(0xFF151624).withOpacity(0.5),
+          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20.0),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: BorderSide(
+              color: Colors.grey.withOpacity(0.4),
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: BorderSide(
+              color: Colors.grey.withOpacity(0.4),
+            ),
+          ),
+        ),
       ),
     );
   }
